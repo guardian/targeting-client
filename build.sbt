@@ -1,6 +1,6 @@
 name := "targeting-client"
 organization := "com.gu"
-scalaVersion := "2.11.7"
+scalaVersion := "2.11.8"
 
 description := "Handles the creation and application of campaigns and their rules for The Guardians targeting system"
 

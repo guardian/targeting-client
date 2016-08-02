@@ -27,6 +27,10 @@ object Campaign {
     Json.toJson[Campaign](campaign)
   }
 
+  def toJson(campaigns: List[Campaign]): JsValue = {
+    Json.toJson[List[Campaign]](campaigns)
+  }
+
   def fromItem(item: Item): Campaign = {
     Json.parse(item.toJSON).as[Campaign]
   }

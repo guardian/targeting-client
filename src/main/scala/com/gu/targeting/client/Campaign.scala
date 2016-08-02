@@ -1,4 +1,4 @@
-package targeting.client
+package com.gu.targeting.client
 
 import com.amazonaws.services.s3._
 import org.cvogt.play.json.Jsonx
@@ -15,8 +15,8 @@ case class Campaign (
 object Campaign {
   implicit val campaignFormatter = Jsonx.formatCaseClassUseDefaults[Campaign]
 
-  def updateStoredRules(campaigns: List[Campaign], client: AmazonS3Client, bucket: String, path: String) = {
-    S3.put(client, bucket, path, Json.toJson(campaigns).toString)
+  def updateStoredCampaign(campaign: Campaign, client: AmazonS3Client, bucket: String, path: String = "/") = {
+    S3.put(client, bucket, path, Json.toJson(campaign).toString)
   }
 }
 
@@ -25,22 +25,17 @@ object CampaignCache {
   var campaigns: List[Campaign] = List()
 
   /// Update the rules for this engine, should be called often
-  def updateRuleCache(client: AmazonS3Client, bucket: String, path: String, stage: String) = {
+  def updateRuleCache(client: AmazonS3Client, bucket: String, path: String = "/") = {
     var newCampaigns = ListBuffer()
 
-    S3.get(client, bucket, path) match {
-      case S3Success(bytes) => {
-        val newList = Json.fromJson[List[Campaign]](Json.parse(new String(bytes, "utf-8")))
-          .getOrElse {
-            throw JsonDeserializationException(s"Could not parse campaigns in ${bucket}, ${path}")
-          }
+    val bytes = S3.get(client, bucket, path)
 
-        campaigns = newList
+    val newList = Json.fromJson[List[Campaign]](Json.parse(new String(bytes, "utf-8")))
+      .getOrElse {
+        throw JsonDeserializationException(s"Could not parse campaigns in ${bucket}, ${path}")
       }
-      case S3NotAuthorized(msg) => throw AuthenticationException(msg)
-      case S3NotFound(msg) => throw TargetingNotFoundException(msg)
-      case S3UnknownException(msg) => throw UnknownException(msg)
-    }
+
+    campaigns = newList
 
     // Filter ones which are inactive or outside the time range
   }

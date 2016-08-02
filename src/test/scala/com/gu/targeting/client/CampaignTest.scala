@@ -1,4 +1,4 @@
-package targeting.client
+package com.gu.targeting.client
 
 import play.api.libs.json._
 import org.scalatest.{FreeSpec, Matchers}

@@ -1,4 +1,4 @@
-package targeting.client
+package com.gu.targeting.client
 
 import org.cvogt.play.json.Jsonx
 import play.api.libs.json._

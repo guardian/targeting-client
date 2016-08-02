@@ -40,7 +40,7 @@ object Campaign {
   }
 
   def updateStoredCampaign(campaign: Campaign, client: AmazonS3Client, bucket: String, path: String = "/") = {
-    S3.put(client, bucket, path, Json.toJson(campaign).toString)
+    S3.put(client, bucket, path + campaign.id, Json.toJson(campaign).toString)
   }
 }
 

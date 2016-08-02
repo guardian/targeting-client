@@ -7,7 +7,7 @@ description := "Handles the creation and application of campaigns and their rule
 scalacOptions ++= Seq("-feature", "-deprecation")
 
 libraryDependencies ++= Seq(
-  "com.amazonaws" % "aws-java-sdk-s3" % "1.11.21",
+  "com.amazonaws" % "aws-java-sdk" % "1.11.21",
   "com.typesafe.play" %% "play-json" % "2.5.4",
   "org.apache.commons" % "commons-io" % "1.3.2",
   "org.cvogt" %% "play-json-extensions" % "0.6.0",

@@ -1,12 +1,16 @@
 package com.gu.targeting.client
 
+import java.util.UUID
 import com.amazonaws.services.s3._
 import org.cvogt.play.json.Jsonx
 import play.api.libs.json._
+import com.amazonaws.services.dynamodbv2.document.{Item}
 import scala.collection.mutable.ListBuffer
 
 case class Campaign (
+  id: UUID,
   rules: List[Rule],
+  priority: Int,
   activeFrom: Option[Long],
   activeUntil: Option[Long],
   displayOnSensitive: Boolean,
@@ -14,6 +18,14 @@ case class Campaign (
 
 object Campaign {
   implicit val campaignFormatter = Jsonx.formatCaseClassUseDefaults[Campaign]
+
+  def fromItem(item: Item): Campaign = {
+    Json.parse(item.toJSON).as[Campaign]
+  }
+
+  def toItem(campaign: Campaign): Item = {
+    Item.fromJSON(Json.toJson(campaign).toString())
+  }
 
   def updateStoredCampaign(campaign: Campaign, client: AmazonS3Client, bucket: String, path: String = "/") = {
     S3.put(client, bucket, path, Json.toJson(campaign).toString)

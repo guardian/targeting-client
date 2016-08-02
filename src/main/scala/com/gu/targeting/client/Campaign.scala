@@ -6,6 +6,7 @@ import org.cvogt.play.json.Jsonx
 import play.api.libs.json._
 import com.amazonaws.services.dynamodbv2.document.{Item}
 import scala.collection.mutable.ListBuffer
+import org.joda.time.DateTime
 
 case class Campaign (
   id: UUID,
@@ -50,18 +51,22 @@ object CampaignCache {
 
   /// Update the rules for this engine, should be called often
   def updateRuleCache(client: AmazonS3Client, bucket: String, path: String = "/") = {
-    var newCampaigns = ListBuffer()
+    var newCampaigns: ListBuffer[Campaign] = ListBuffer()
 
-    val bytes = S3.get(client, bucket, path)
+    S3.list(client, bucket, path).foreach( key => {
+      val bytes = S3.get(client, bucket, key)
+      newCampaigns += Json.fromJson[Campaign](Json.parse(new String(bytes, "utf-8")))
+        .getOrElse {
+          throw JsonDeserializationException(s"Could not parse campaigns in ${bucket}, ${key}")
+        }
+    })
 
-    val newList = Json.fromJson[List[Campaign]](Json.parse(new String(bytes, "utf-8")))
-      .getOrElse {
-        throw JsonDeserializationException(s"Could not parse campaigns in ${bucket}, ${path}")
-      }
+    campaigns = newCampaigns.toList.filter(filterInactive)
+  }
 
-    campaigns = newList
-
-    // Filter ones which are inactive or outside the time range
+  private def filterInactive(c: Campaign): Boolean = {
+    val now = DateTime.now.getMillis
+    c.activeFrom.map(now > _).getOrElse(true) && c.activeUntil.map(now < _).getOrElse(true)
   }
 
   def getCampaignsForTags(tags: Seq[String]): List[Campaign] = {

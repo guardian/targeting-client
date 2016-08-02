@@ -19,6 +19,10 @@ case class Campaign (
 object Campaign {
   implicit val campaignFormatter = Jsonx.formatCaseClassUseDefaults[Campaign]
 
+  def toJson(campaign: Campaign): JsValue = {
+    Json.toJson[Campaign](campaign)
+  }
+
   def fromItem(item: Item): Campaign = {
     Json.parse(item.toJSON).as[Campaign]
   }

@@ -50,7 +50,7 @@ object CampaignCache {
   var campaigns: List[Campaign] = List()
 
   /// Update the rules for this engine, should be called often
-  def updateRuleCache(client: AmazonS3Client, bucket: String) = {
+  def update(client: AmazonS3Client, bucket: String) = {
     val path = BuildInfo.version + "/"
     var newCampaigns: ListBuffer[Campaign] = ListBuffer()
 

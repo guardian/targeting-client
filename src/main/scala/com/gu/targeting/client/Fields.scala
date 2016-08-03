@@ -13,15 +13,12 @@ object Fields {
   // Special field the serializer uses to transfer information about the type of the fields across the typeless JSON
   val reservedTypeField = "__type"
 
-  // List of reserved type names used by the '__type' field to select the correct subclass of Fields
-  val emailType = "email"
-
   val emailFormat = Jsonx.formatCaseClassUseDefaults[EmailFields]
 
   val fieldWrites = new Writes[Fields] {
     override def writes(field: Fields): JsValue = {
       field match {
-        case f: EmailFields => emailFormat.writes(f).asInstanceOf[JsObject] + (reservedTypeField, JsString(emailType))
+        case f: EmailFields => emailFormat.writes(f).asInstanceOf[JsObject] + (reservedTypeField, JsString("email"))
         case other => {
           throw new UnsupportedOperationException(s"Unable to serialize field of type ${other.getClass}")
         }
@@ -32,7 +29,7 @@ object Fields {
   val fieldReads = new Reads[Fields] {
     override def reads(json: JsValue): JsResult[Fields] = {
       (json \ reservedTypeField).get match {
-        case JsString(emailType) => emailFormat.reads(json)
+        case JsString("email") => emailFormat.reads(json)
         case other => JsError(s"Unexpected step type value: ${other}")
       }
     }

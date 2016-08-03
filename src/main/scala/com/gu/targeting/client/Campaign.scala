@@ -40,8 +40,8 @@ object Campaign {
     Item.fromJSON(Json.toJson(campaign).toString())
   }
 
-  def updateStoredCampaign(campaign: Campaign, client: AmazonS3Client, bucket: String, path: String = "/") = {
-    S3.put(client, bucket, path + campaign.id, Json.toJson(campaign).toString)
+  def updateStoredCampaign(campaign: Campaign, client: AmazonS3Client, bucket: String) = {
+    S3.put(client, bucket, Version + "/" + campaign.id, Json.toJson(campaign).toString)
   }
 }
 
@@ -50,7 +50,8 @@ object CampaignCache {
   var campaigns: List[Campaign] = List()
 
   /// Update the rules for this engine, should be called often
-  def updateRuleCache(client: AmazonS3Client, bucket: String, path: String = "/") = {
+  def updateRuleCache(client: AmazonS3Client, bucket: String) = {
+    val path = Version + "/"
     var newCampaigns: ListBuffer[Campaign] = ListBuffer()
 
     S3.list(client, bucket, path).foreach( key => {

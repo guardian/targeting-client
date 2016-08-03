@@ -19,3 +19,10 @@ publishMavenStyle := true
 bintrayOrganization := Some("guardian")
 bintrayRepository := "editorial-tools"
 licenses += ("Apache-2.0", url("https://github.com/guardian/tags-thrift-schema/blob/master/LICENSE"))
+
+lazy val root = (project in file("."))
+  .enablePlugins(BuildInfoPlugin)
+  .settings(
+    buildInfoKeys := Seq[BuildInfoKey](version),
+    buildInfoPackage := "com.gu.targeting.client"
+  )

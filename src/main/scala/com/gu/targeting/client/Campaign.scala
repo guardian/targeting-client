@@ -45,7 +45,7 @@ object Campaign {
   }
 }
 
-object CampaignCache {
+class CampaignCache {
   var lastUpdate: Long = 0
   var campaigns: List[Campaign] = List()
 

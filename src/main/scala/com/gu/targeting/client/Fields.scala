@@ -30,7 +30,7 @@ object Fields {
     override def reads(json: JsValue): JsResult[Fields] = {
       (json \ reservedTypeField).get match {
         case JsString("email") => emailFormat.reads(json)
-        case other => JsError(s"Unexpected step type value: ${other}")
+        case other => JsError(s"Unexpected rule type value: ${other}")
       }
     }
   }

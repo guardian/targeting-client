@@ -7,3 +7,4 @@ case class JsonDeserializationException(msg: String) extends RuntimeException(ms
 case class TargetingNotFoundException(msg: String) extends RuntimeException(msg)
 case class AuthenticationException(msg: String) extends RuntimeException(msg)
 case class UnknownException(msg: String) extends RuntimeException(msg)
+case class RuleParseException(msg: String) extends RuntimeException(msg)

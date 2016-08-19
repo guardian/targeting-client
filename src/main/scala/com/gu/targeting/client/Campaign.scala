@@ -2,8 +2,8 @@ package com.gu.targeting.client
 
 import java.util.UUID
 import com.amazonaws.services.s3._
-import org.cvogt.play.json.Jsonx
 import play.api.libs.json._
+import play.api.libs.functional.syntax._
 import com.amazonaws.services.dynamodbv2.document.{Item}
 import scala.collection.mutable.ListBuffer
 import org.joda.time.DateTime
@@ -18,7 +18,15 @@ case class Campaign (
   fields: Fields)
 
 object Campaign {
-  implicit val campaignFormatter = Jsonx.formatCaseClassUseDefaults[Campaign]
+  implicit val campaignFormat = (
+    (JsPath \ "id").format[UUID] and
+    (JsPath \ "rules").format[List[Rule]] and
+    (JsPath \ "priority").format[Int] and
+    (JsPath \ "activeFrom").formatNullable[Long] and
+    (JsPath \ "activeUntil").formatNullable[Long] and
+    (JsPath \ "displayOnSensitive").format[Boolean] and
+    (JsPath \ "fields").format[Fields]
+  )(Campaign.apply, unlift(Campaign.unapply))
 
   def fromJson(json: JsValue) = {
     json.as[Campaign]

@@ -11,7 +11,7 @@ case class EmailFields(name: String, theme: String, about: String, description: 
 
 object Fields {
   // Special field the serializer uses to transfer information about the type of the fields across the typeless JSON
-  val reservedTypeField = "__type"
+  val reservedTypeField = "_type"
 
   val emailType = "email"
   val emailFormat = (

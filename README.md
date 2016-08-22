@@ -25,7 +25,7 @@ Campaign types are expressed as a set of fields. To add a new set of fields edit
   2. `fieldReads` is similar except it searches a block of JSON for a `type` variable and uses it to select the correct subclass of `Fields`
 4. You should be done now! Ensure the library still compiles and then continue onto the following section on how to publish a new version.
 
-> \* Note: you cannot have a variable called `__type` since the JSON serializers use this string in order to know what type of field is being read.
+> \* Note: you cannot have a variable called `_type` since the JSON serializers use this string in order to know what type of field is being read.
 
 # Publishing a new version
 

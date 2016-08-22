@@ -1,7 +1,7 @@
 package com.gu.targeting.client
 
-import org.cvogt.play.json.Jsonx
 import play.api.libs.json._
+import play.api.libs.functional.syntax._
 
 case class Rule(requiredTags: List[String], lackingTags: List[String]) {
   def evaluate(tags: Seq[String]): Boolean = {
@@ -22,5 +22,8 @@ case class Rule(requiredTags: List[String], lackingTags: List[String]) {
 }
 
 object Rule {
-  implicit val ruleFormatter = Jsonx.formatCaseClassUseDefaults[Rule]
+  implicit val ruleFormat = (
+    (JsPath \ "requiredTags").format[List[String]] and
+    (JsPath \ "lackingTags").format[List[String]]
+  )(Rule.apply, unlift(Rule.unapply))
 }

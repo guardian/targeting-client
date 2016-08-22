@@ -1,28 +1,56 @@
-name := "targeting-client"
-organization := "com.gu"
-scalaVersion := "2.11.8"
+import Dependencies._
 
-description := "Handles the creation and application of campaigns and their rules for The Guardians targeting system"
+scalaVersion in ThisBuild := "2.11.8"
+
+description in ThisBuild := "Handles the creation and application of campaigns and their rules for The Guardians targeting system"
 
 scalacOptions ++= Seq("-feature", "-deprecation")
 
-libraryDependencies ++= Seq(
-  "com.amazonaws" % "aws-java-sdk" % "1.11.21",
-  "com.typesafe.play" %% "play-json" % "2.5.4",
-  "org.apache.commons" % "commons-io" % "1.3.2",
-  "org.cvogt" %% "play-json-extensions" % "0.6.0",
-  "org.scalactic" %% "scalactic" % "2.2.6",
-  "org.scalatest" %% "scalatest" % "2.2.6" % "test"
-)
-
-publishMavenStyle := true
-bintrayOrganization := Some("guardian")
-bintrayRepository := "editorial-tools"
-licenses += ("Apache-2.0", url("https://github.com/guardian/tags-thrift-schema/blob/master/LICENSE"))
-
-lazy val root = (project in file("."))
-  .enablePlugins(BuildInfoPlugin)
-  .settings(
-    buildInfoKeys := Seq[BuildInfoKey](version),
-    buildInfoPackage := "com.gu.targeting.client"
+val bintraySettings = Seq(
+  publishMavenStyle := true,
+  bintrayOrganization := Some("guardian"),
+  bintrayRepository := "editorial-tools",
+  licenses += ("Apache-2.0", url("https://github.com/guardian/tags-thrift-schema/blob/master/LICENSE"))
   )
+
+lazy val targetingClientPlay24 = project.in(file("targeting-client-play24"))
+  .enablePlugins(BuildInfoPlugin)
+  .settings(bintraySettings: _*)
+  .settings(
+    name := "targeting-client-play24",
+    organization := "com.gu",
+    publishArtifact := true,
+    sourceDirectory := baseDirectory.value / "../src",
+
+    buildInfoKeys := Seq[BuildInfoKey](version),
+    buildInfoPackage := "com.gu.targeting.client",
+
+    libraryDependencies ++= Seq(
+      awsSdk,
+      commonsIo,
+      scalatic,
+      scalaTest,
+      playJson24
+    )
+  )
+
+lazy val targetingClient = project.in(file("."))
+  .enablePlugins(BuildInfoPlugin)
+  .settings(bintraySettings: _*)
+  .settings(
+    name := "targeting-client",
+    organization := "com.gu",
+    publishArtifact := true,
+
+    buildInfoKeys := Seq[BuildInfoKey](version),
+    buildInfoPackage := "com.gu.targeting.client",
+
+    libraryDependencies ++= Seq(
+      awsSdk,
+      commonsIo,
+      scalatic,
+      scalaTest,
+      playJson25
+    )
+  )
+

@@ -10,6 +10,7 @@ import org.joda.time.DateTime
 
 case class Campaign (
   id: UUID,
+  name: String,
   rules: List[Rule],
   priority: Int,
   activeFrom: Option[Long],
@@ -20,6 +21,7 @@ case class Campaign (
 object Campaign {
   implicit val campaignFormat = (
     (JsPath \ "id").format[UUID] and
+    (JsPath \ "name").format[String] and
     (JsPath \ "rules").format[List[Rule]] and
     (JsPath \ "priority").format[Int] and
     (JsPath \ "activeFrom").formatNullable[Long] and

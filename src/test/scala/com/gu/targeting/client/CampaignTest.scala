@@ -14,7 +14,7 @@ class CampaignTests extends FreeSpec with Matchers {
   val id = UUID.randomUUID()
 
   "Campaign should convert to JSON correctly" in {
-    val campaign = Campaign(id, rules, 10, None, None, false, expectedFields)
+    val campaign = Campaign(id, "name", rules, 10, None, None, false, expectedFields)
     Json.toJson(campaign).toString
   }
 }

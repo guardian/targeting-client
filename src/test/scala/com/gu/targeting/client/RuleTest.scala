@@ -11,23 +11,23 @@ class RuleTest extends FreeSpec with Matchers {
   "A rule" - {
     "when evaluated" - {
       "returns true with matching tags" in {
-        assert(rule.evaluate(tagsToMatch))
+        assert(Rule.evaluate(rule, tagsToMatch))
       }
 
       "returns true with any matching tags" in {
-        assert(rule.evaluate(List(tagsToMatch(0))))
+        assert(Rule.evaluate(rule, List(tagsToMatch(0))))
       }
 
       "returns false with excluded tags" in {
-        assert(!rule.evaluate(tagsToExclude))
+        assert(!Rule.evaluate(rule, tagsToExclude))
       }
 
       "returns false with excluded and tags" in {
-        assert(!rule.evaluate(tagsToExclude ++ tagsToMatch))
+        assert(!Rule.evaluate(rule, tagsToExclude ++ tagsToMatch))
       }
 
       "returns false with any excluded tag" in {
-        assert(!rule.evaluate(List(tagsToMatch(0), tagsToExclude(0))))
+        assert(!Rule.evaluate(rule, List(tagsToMatch(0), tagsToExclude(0))))
       }
 
     }

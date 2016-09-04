@@ -14,6 +14,10 @@ class RuleTest extends FreeSpec with Matchers {
         assert(rule.evaluate(tagsToMatch))
       }
 
+      "returns true with any matching tags" in {
+        assert(rule.evaluate(List(tagsToMatch(0))))
+      }
+
       "returns false with excluded tags" in {
         assert(!rule.evaluate(tagsToExclude))
       }
@@ -23,8 +27,9 @@ class RuleTest extends FreeSpec with Matchers {
       }
 
       "returns false with any excluded tag" in {
-        assert(!rule.evaluate(tagsToMatch ++ List(tagsToExclude(0))))
+        assert(!rule.evaluate(List(tagsToMatch(0), tagsToExclude(0))))
       }
+
     }
   }
 }

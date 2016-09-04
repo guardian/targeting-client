@@ -5,19 +5,8 @@ import play.api.libs.functional.syntax._
 
 case class Rule(requiredTags: List[String], lackingTags: List[String]) {
   def evaluate(tags: Seq[String]): Boolean = {
-    for (tag <- requiredTags) {
-      if (!tags.contains(tag)) {
-        return false
-      }
-    }
-
-    for (tag <- lackingTags) {
-      if (tags.contains(tag)) {
-        return false
-      }
-    }
-
-    return true
+    tags.intersect(requiredTags).nonEmpty &&
+      tags.intersect(lackingTags).isEmpty
   }
 }
 

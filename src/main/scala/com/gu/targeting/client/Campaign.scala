@@ -5,8 +5,10 @@ import com.amazonaws.services.s3._
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import com.amazonaws.services.dynamodbv2.document.{Item}
-import scala.collection.mutable.ListBuffer
 import org.joda.time.DateTime
+
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 case class Campaign (
   id: UUID,
@@ -55,24 +57,43 @@ object Campaign {
   }
 }
 
-class CampaignCache {
-  var lastUpdate: Long = 0
-  var campaigns: List[Campaign] = List()
+case class CampaignCache(campaigns: List[Campaign] = List.empty) {
+  def getCampaignsForTags(tags: Seq[String]): List[Campaign] = {
+    campaigns.filter(c => c.rules.exists(r => r.evaluate(tags)))
+  }
+}
 
+object CampaignCache {
   /// Update the rules for this engine, should be called often
-  def update(client: AmazonS3Client, bucket: String) = {
+  def fetch(client: AmazonS3Client, bucket: String): Future[CampaignCache] = {
+    //TODO: Seperate build number from s3 path!
     val path = BuildInfo.version + "/"
-    var newCampaigns: ListBuffer[Campaign] = ListBuffer()
 
-    S3.list(client, bucket, path).foreach( key => {
-      val bytes = S3.get(client, bucket, key)
-      newCampaigns += Json.fromJson[Campaign](Json.parse(new String(bytes, "utf-8")))
-        .getOrElse {
-          throw JsonDeserializationException(s"Could not parse campaigns in ${bucket}, ${key}")
-        }
-    })
+    val futureCampaignList = Future{ S3.list(client, bucket, path) }
 
-    campaigns = newCampaigns.toList.filter(filterInactive)
+    val newCampaigns: Future[List[Campaign]] = {
+      futureCampaignList.flatMap { campaigns: List[String] =>
+        getCampaigns(client, bucket, campaigns)
+      }
+    }
+
+    newCampaigns.map{ campaigns =>
+      val activeCampaigns = campaigns.filter(filterInactive)
+      CampaignCache(activeCampaigns)
+    }
+  }
+
+  def getCampaigns(client: AmazonS3Client, bucket: String, keys: List[String]): Future[List[Campaign]] = {
+    val futureCampaigns = keys.map { key =>
+      Future {
+        val bytes = S3.get(client, bucket, key)
+        Json.fromJson[Campaign](Json.parse(new String(bytes, "utf-8")))
+          .getOrElse {
+            throw JsonDeserializationException(s"Could not parse campaigns in ${bucket}, ${key}")
+          }
+      }
+    }
+    Future.sequence(futureCampaigns)
   }
 
   private def filterInactive(c: Campaign): Boolean = {
@@ -80,7 +101,4 @@ class CampaignCache {
     c.activeFrom.map(now > _).getOrElse(true) && c.activeUntil.map(now < _).getOrElse(true)
   }
 
-  def getCampaignsForTags(tags: Seq[String]): List[Campaign] = {
-    campaigns.filter(c => c.rules.exists(r => r.evaluate(tags)))
-  }
 }

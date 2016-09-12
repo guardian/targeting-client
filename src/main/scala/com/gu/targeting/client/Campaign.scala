@@ -5,8 +5,14 @@ import com.amazonaws.services.s3._
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import com.amazonaws.services.dynamodbv2.document.{Item}
+import play.api.libs.ws.ning.NingWSClient
 import scala.collection.mutable.ListBuffer
 import org.joda.time.DateTime
+import org.apache.http.impl.client.HttpClients
+import org.apache.http.client.methods.HttpGet
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 case class Campaign (
   id: UUID,
@@ -49,30 +55,28 @@ object Campaign {
   def toItem(campaign: Campaign): Item = {
     Item.fromJSON(Json.toJson(campaign).toString())
   }
+}
 
-  def updateStoredCampaign(campaign: Campaign, client: AmazonS3Client, bucket: String) = {
-    S3.put(client, bucket, BuildInfo.version + "/" + campaign.id, Json.toJson(campaign).toString)
+case class CampaignCache(campaigns: List[Campaign]) {
+  def getCampaignsForTags(tags: Seq[String]): List[Campaign] = {
+    campaigns.filter(c => c.rules.exists(r => r.evaluate(tags)))
   }
 }
 
-class CampaignCache {
-  var lastUpdate: Long = 0
-  var campaigns: List[Campaign] = List()
+object CampaignCache {
+  val wsClient = NingWSClient()
 
-  /// Update the rules for this engine, should be called often
-  def update(client: AmazonS3Client, bucket: String) = {
-    val path = BuildInfo.version + "/"
-    var newCampaigns: ListBuffer[Campaign] = ListBuffer()
+  def fetch(url: String): Future[CampaignCache] = {
+      wsClient
+        .url(url)
+        .get()
+        .map { response =>
+          if (!(200 to 299).contains(response.status)) {
+            throw TargetingServiceException(s"Failed to get campaign list, status code: ${response.status}")
+          }
 
-    S3.list(client, bucket, path).foreach( key => {
-      val bytes = S3.get(client, bucket, key)
-      newCampaigns += Json.fromJson[Campaign](Json.parse(new String(bytes, "utf-8")))
-        .getOrElse {
-          throw JsonDeserializationException(s"Could not parse campaigns in ${bucket}, ${key}")
+          CampaignCache(Json.parse(response.body).as[List[Campaign]].filter(filterInactive))
         }
-    })
-
-    campaigns = newCampaigns.toList.filter(filterInactive)
   }
 
   private def filterInactive(c: Campaign): Boolean = {
@@ -80,7 +84,4 @@ class CampaignCache {
     c.activeFrom.map(now > _).getOrElse(true) && c.activeUntil.map(now < _).getOrElse(true)
   }
 
-  def getCampaignsForTags(tags: Seq[String]): List[Campaign] = {
-    campaigns.filter(c => c.rules.exists(r => r.evaluate(tags)))
-  }
 }

@@ -4,6 +4,4 @@ package com.gu.targeting.client
 // For example converting the TargetingNotFound exception into a 404.
 
 case class JsonDeserializationException(msg: String) extends RuntimeException(msg)
-case class TargetingNotFoundException(msg: String) extends RuntimeException(msg)
-case class AuthenticationException(msg: String) extends RuntimeException(msg)
-case class UnknownException(msg: String) extends RuntimeException(msg)
+case class TargetingServiceException(msg: String) extends RuntimeException(msg)

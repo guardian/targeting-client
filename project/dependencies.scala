@@ -9,7 +9,4 @@ object Dependencies {
 
   val playJson25 = "com.typesafe.play" %% "play-json" % "2.5.4"
   val playJson24 = "com.typesafe.play" %% "play-json" % "2.4.8"
-
-  val playWs25 = "com.typesafe.play" %% "play-ws" % "2.5.4"
-  val playWs24 = "com.typesafe.play" %% "play-ws" % "2.4.8"
 }

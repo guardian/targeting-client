@@ -1,18 +1,15 @@
 package com.gu.targeting.client
 
 import java.util.UUID
-import com.amazonaws.services.s3._
+import org.apache.http.client.methods.{CloseableHttpResponse, HttpGet}
+import org.apache.http.impl.client.HttpClients
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
-import com.amazonaws.services.dynamodbv2.document.{Item}
-import play.api.libs.ws.ning.NingWSClient
-import scala.collection.mutable.ListBuffer
+import com.amazonaws.services.dynamodbv2.document.Item
 import org.joda.time.DateTime
-import org.apache.http.impl.client.HttpClients
-import org.apache.http.client.methods.HttpGet
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-
+import scala.io.Source
 
 case class Campaign (
   id: UUID,
@@ -64,24 +61,17 @@ case class CampaignCache(campaigns: List[Campaign]) {
 }
 
 object CampaignCache {
-  val wsClient = NingWSClient()
-
   def fetch(url: String): Future[CampaignCache] = {
-      wsClient
-        .url(url)
-        .get()
-        .map { response =>
-          if (!(200 to 299).contains(response.status)) {
-            throw TargetingServiceException(s"Failed to get campaign list, status code: ${response.status}")
-          }
+    Future {
+      val response = HttpClients.createDefault().execute(new HttpGet(url))
 
-          CampaignCache(Json.parse(response.body).as[List[Campaign]].filter(filterInactive))
-        }
+      val status = response.getStatusLine.getStatusCode
+      if (!(200 to 299).contains(status)) {
+        throw TargetingServiceException(s"Failed to get campaign list, status code: $status")
+      }
+
+      val body = Source.fromInputStream(response.getEntity.getContent).getLines().mkString("")
+      CampaignCache(Json.parse(body).as[List[Campaign]])
+    }
   }
-
-  private def filterInactive(c: Campaign): Boolean = {
-    val now = DateTime.now.getMillis
-    c.activeFrom.map(now > _).getOrElse(true) && c.activeUntil.map(now < _).getOrElse(true)
-  }
-
 }

@@ -58,6 +58,13 @@ case class CampaignCache(campaigns: List[Campaign]) {
   def getCampaignsForTags(tags: Seq[String]): List[Campaign] = {
     campaigns.filter(c => c.rules.exists(r => r.evaluate(tags)))
   }
+
+  def getFieldType(campaign: Campaign): Option[String] = {
+    campaign.fields match {
+      case _: EmailFields => Some(Fields.emailType)
+      case _ => None
+    }
+  }
 }
 
 object CampaignCache {

@@ -14,6 +14,9 @@ object Fields {
   val reservedTypeField = "_type"
 
   val emailType = "email"
+
+  val allTypes = List(emailType)
+
   val emailFormat = (
       (JsPath \ "name").format[String] and
       (JsPath \ "theme").format[String] and

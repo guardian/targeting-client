@@ -61,9 +61,14 @@ case class CampaignCache(campaigns: List[Campaign]) {
 }
 
 object CampaignCache {
+  /// Fetch a new campaign cache which contains the latest campaigns.
+  /// The URL should correspond to the api end point which lists campaigns as json.
+  /// For example: https://targeting.gutools.co.uk/api/campaigns
   def fetch(url: String): Future[CampaignCache] = {
+    val queryUrl = url + "?activeOnly=true&types=" + Fields.allTypes.mkString(",")
+
     Future {
-      val response = HttpClients.createDefault().execute(new HttpGet(url))
+      val response = HttpClients.createDefault().execute(new HttpGet(queryUrl))
 
       val status = response.getStatusLine.getStatusCode
       if (!(200 to 299).contains(status)) {

@@ -53,6 +53,13 @@ object Campaign {
   def updateStoredCampaign(campaign: Campaign, client: AmazonS3Client, bucket: String) = {
     S3.put(client, bucket, BuildInfo.version + "/" + campaign.id, Json.toJson(campaign).toString)
   }
+
+  def getFieldType(campaign: Campaign): Option[String] = {
+    campaign.fields match {
+      case _: EmailFields => Some(Fields.emailType)
+      case _ => None
+    }
+  }
 }
 
 class CampaignCache {

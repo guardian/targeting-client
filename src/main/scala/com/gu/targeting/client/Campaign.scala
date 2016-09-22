@@ -56,7 +56,7 @@ object Campaign {
 
 case class CampaignCache(campaigns: List[Campaign]) {
   def getCampaignsForTags(tags: Seq[String]): List[Campaign] = {
-    campaigns.filter(c => c.rules.exists(r => r.evaluate(tags)))
+    campaigns.filter(c => c.rules.exists(r => Rule.evaluate(r, tags)))
   }
 
   def getFieldType(campaign: Campaign): Option[String] = {

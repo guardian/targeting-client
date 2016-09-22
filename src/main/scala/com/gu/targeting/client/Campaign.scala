@@ -53,18 +53,18 @@ object Campaign {
   def toItem(campaign: Campaign): Item = {
     Item.fromJSON(Json.toJson(campaign).toString())
   }
-}
-
-case class CampaignCache(campaigns: List[Campaign], totalCampaigns: Option[Int]) {
-  def getCampaignsForTags(tags: Seq[String]): List[Campaign] = {
-    campaigns.filter(c => c.rules.exists(r => Rule.evaluate(r, tags)))
-  }
 
   def getFieldType(campaign: Campaign): Option[String] = {
     campaign.fields match {
       case _: EmailFields => Some(Fields.emailType)
       case _ => None
     }
+  }
+}
+
+case class CampaignCache(campaigns: List[Campaign], totalCampaigns: Option[Int]) {
+  def getCampaignsForTags(tags: Seq[String]): List[Campaign] = {
+    campaigns.filter(c => c.rules.exists(r => Rule.evaluate(r, tags)))
   }
 }
 

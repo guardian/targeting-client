@@ -30,6 +30,7 @@ lazy val targetingClientPlay24 = project.in(file("targeting-client-play24"))
       commonsIo,
       scalatic,
       scalaTest,
+      http,
       playJson24
     )
   )
@@ -50,6 +51,7 @@ lazy val targetingClient = project.in(file("."))
       commonsIo,
       scalatic,
       scalaTest,
+      http,
       playJson25
     )
   )

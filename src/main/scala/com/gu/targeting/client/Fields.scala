@@ -14,6 +14,9 @@ object Fields {
   val reservedTypeField = "_type"
 
   val emailType = "email"
+
+  val allTypes = List(emailType)
+
   val emailFormat = (
       (JsPath \ "name").format[String] and
       (JsPath \ "theme").format[String] and
@@ -26,7 +29,7 @@ object Fields {
   val fieldWrites = new Writes[Fields] {
     override def writes(field: Fields): JsValue = {
       field match {
-        case f: EmailFields => emailFormat.writes(f).asInstanceOf[JsObject] + (reservedTypeField, JsString(emailType))
+        case f: EmailFields => emailFormat.writes(f) + (reservedTypeField, JsString(emailType))
         case other => {
           throw new UnsupportedOperationException(s"Unable to serialize field of type ${other.getClass}")
         }
@@ -37,8 +40,8 @@ object Fields {
   val fieldReads = new Reads[Fields] {
     override def reads(json: JsValue): JsResult[Fields] = {
       (json \ reservedTypeField).get match {
-        case JsString(emailType) => emailFormat.reads(json)
-        case other => JsError(s"Unexpected step type value: ${other}")
+        case JsString(`emailType`) => emailFormat.reads(json)
+        case other => JsError(s"Unexpected step type value: $other")
       }
     }
   }

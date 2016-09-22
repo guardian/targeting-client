@@ -1,12 +1,15 @@
 package com.gu.targeting.client
 
 import java.util.UUID
-import com.amazonaws.services.s3._
+import org.apache.http.client.methods.{CloseableHttpResponse, HttpGet}
+import org.apache.http.impl.client.HttpClients
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
-import com.amazonaws.services.dynamodbv2.document.{Item}
-import scala.collection.mutable.ListBuffer
+import com.amazonaws.services.dynamodbv2.document.Item
 import org.joda.time.DateTime
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.io.Source
 
 case class Campaign (
   id: UUID,
@@ -49,38 +52,38 @@ object Campaign {
   def toItem(campaign: Campaign): Item = {
     Item.fromJSON(Json.toJson(campaign).toString())
   }
+}
 
-  def updateStoredCampaign(campaign: Campaign, client: AmazonS3Client, bucket: String) = {
-    S3.put(client, bucket, BuildInfo.version + "/" + campaign.id, Json.toJson(campaign).toString)
+case class CampaignCache(campaigns: List[Campaign]) {
+  def getCampaignsForTags(tags: Seq[String]): List[Campaign] = {
+    campaigns.filter(c => c.rules.exists(r => Rule.evaluate(r, tags)))
+  }
+
+  def getFieldType(campaign: Campaign): Option[String] = {
+    campaign.fields match {
+      case _: EmailFields => Some(Fields.emailType)
+      case _ => None
+    }
   }
 }
 
-class CampaignCache {
-  var lastUpdate: Long = 0
-  var campaigns: List[Campaign] = List()
+object CampaignCache {
+  /// Fetch a new campaign cache which contains the latest campaigns.
+  /// The URL should correspond to the api end point which lists campaigns as json.
+  /// For example: https://targeting.gutools.co.uk/api/campaigns
+  def fetch(url: String): Future[CampaignCache] = {
+    val queryUrl = url + "?activeOnly=true&types=" + Fields.allTypes.mkString(",")
 
-  /// Update the rules for this engine, should be called often
-  def update(client: AmazonS3Client, bucket: String) = {
-    val path = BuildInfo.version + "/"
-    var newCampaigns: ListBuffer[Campaign] = ListBuffer()
+    Future {
+      val response = HttpClients.createDefault().execute(new HttpGet(queryUrl))
 
-    S3.list(client, bucket, path).foreach( key => {
-      val bytes = S3.get(client, bucket, key)
-      newCampaigns += Json.fromJson[Campaign](Json.parse(new String(bytes, "utf-8")))
-        .getOrElse {
-          throw JsonDeserializationException(s"Could not parse campaigns in ${bucket}, ${key}")
-        }
-    })
+      val status = response.getStatusLine.getStatusCode
+      if (!(200 to 299).contains(status)) {
+        throw TargetingServiceException(s"Failed to get campaign list, status code: $status")
+      }
 
-    campaigns = newCampaigns.toList.filter(filterInactive)
-  }
-
-  private def filterInactive(c: Campaign): Boolean = {
-    val now = DateTime.now.getMillis
-    c.activeFrom.map(now > _).getOrElse(true) && c.activeUntil.map(now < _).getOrElse(true)
-  }
-
-  def getCampaignsForTags(tags: Seq[String]): List[Campaign] = {
-    campaigns.filter(c => c.rules.exists(r => Rule.evaluate(r, tags)))
+      val body = Source.fromInputStream(response.getEntity.getContent).getLines().mkString("")
+      CampaignCache(Json.parse(body).as[List[Campaign]])
+    }
   }
 }

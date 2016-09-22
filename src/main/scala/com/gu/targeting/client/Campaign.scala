@@ -10,6 +10,7 @@ import org.joda.time.DateTime
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.Source
+import scala.util.Try
 
 case class Campaign (
   id: UUID,
@@ -54,7 +55,7 @@ object Campaign {
   }
 }
 
-case class CampaignCache(campaigns: List[Campaign]) {
+case class CampaignCache(campaigns: List[Campaign], totalCampaigns: Option[Int]) {
   def getCampaignsForTags(tags: Seq[String]): List[Campaign] = {
     campaigns.filter(c => c.rules.exists(r => r.evaluate(tags)))
   }
@@ -68,11 +69,13 @@ case class CampaignCache(campaigns: List[Campaign]) {
 }
 
 object CampaignCache {
+  val TOTAL_CAMPAIGNS_HEADER_NAME = "Total-Campaigns"
+
   /// Fetch a new campaign cache which contains the latest campaigns.
   /// The URL should correspond to the api end point which lists campaigns as json.
   /// For example: https://targeting.gutools.co.uk/api/campaigns
-  def fetch(url: String): Future[CampaignCache] = {
-    val queryUrl = url + "?activeOnly=true&types=" + Fields.allTypes.mkString(",")
+  def fetch(url: String, limit: Int = 100): Future[CampaignCache] = {
+    val queryUrl = url + s"?activeOnly=true&limit=$limit&types=${Fields.allTypes.mkString(",")}"
 
     Future {
       val response = HttpClients.createDefault().execute(new HttpGet(queryUrl))
@@ -83,7 +86,10 @@ object CampaignCache {
       }
 
       val body = Source.fromInputStream(response.getEntity.getContent).getLines().mkString("")
-      CampaignCache(Json.parse(body).as[List[Campaign]])
+      val header = response.getFirstHeader(TOTAL_CAMPAIGNS_HEADER_NAME)
+      val totalCampaigns = Try(header.getValue.toInt).toOption
+
+      CampaignCache(Json.parse(body).as[List[Campaign]], totalCampaigns)
     }
   }
 }

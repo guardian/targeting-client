@@ -71,10 +71,13 @@ case class CampaignCache(campaigns: List[Campaign], totalCampaigns: Option[Int])
 object CampaignCache {
   val TOTAL_CAMPAIGNS_HEADER_NAME = "Total-Campaigns"
 
-  /// Fetch a new campaign cache which contains the latest campaigns.
-  /// The URL should correspond to the api end point which lists campaigns as json.
-  /// For example: https://targeting.gutools.co.uk/api/campaigns
-  def fetch(url: String, limit: Int = 100): Future[CampaignCache] = {
+  /** Fetch a new campaign cache which contains the latest campaigns.
+   * @param url should correspond to the api end point which lists campaigns as json (https://targeting.gutools.co.uk/api/campaigns)
+   * @param limit truncate the number of campaigns to this number
+   * @param ruleLimit Any campaigns with more rules than this number will be dropped from the results
+   * @param tagLimit Any campaigns with any rules with more tags (requiredTags + lackingTags) than this number will be dropped
+   */
+  def fetch(url: String, limit: Int = 100, ruleLimit: Int = Int.MaxValue, tagLimit: Int = Int.MaxValue): Future[CampaignCache] = {
     val queryUrl = url + s"?activeOnly=true&limit=$limit&types=${Fields.allTypes.mkString(",")}"
 
     Future {
@@ -86,10 +89,19 @@ object CampaignCache {
       }
 
       val body = Source.fromInputStream(response.getEntity.getContent).getLines().mkString("")
+
+      // Total campaigns number, used to indicate to the client how many campaigns they've truncated
       val header = response.getFirstHeader(TOTAL_CAMPAIGNS_HEADER_NAME)
       val totalCampaigns = Try(header.getValue.toInt).toOption
 
-      CampaignCache(Json.parse(body).as[List[Campaign]], totalCampaigns)
+      val campaigns = Json.parse(body).as[List[Campaign]].filter(campaign => {
+        // Is the number of rules less than or equal to the limit?
+        campaign.rules.length <= ruleLimit &&
+        // And all of the rules have too many required or lacking tags
+        campaign.rules.forall(rule => rule.requiredTags.length + rule.lackingTags.length <= tagLimit)
+      })
+
+      CampaignCache(campaigns, totalCampaigns)
     }
   }
 }

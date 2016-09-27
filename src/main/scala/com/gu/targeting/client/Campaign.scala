@@ -77,7 +77,7 @@ object CampaignCache {
    * @param ruleLimit Any campaigns with more rules than this number will be dropped from the results
    * @param tagLimit Any campaigns with any rules with more tags (requiredTags + lackingTags) than this number will be dropped
    */
-  def fetch(url: String, limit: Int = 100, ruleLimit: Int = Int.MaxValue, tagLimit: Int = Int.MaxValue): Future[CampaignCache] = {
+  def fetch(url: String, limit: Int = 100, ruleLimit: Option[Int] = None, tagLimit: Option[Int] = None): Future[CampaignCache] = {
     val queryUrl = url + s"?activeOnly=true&limit=$limit&types=${Fields.allTypes.mkString(",")}"
 
     Future {
@@ -96,9 +96,9 @@ object CampaignCache {
 
       val campaigns = Json.parse(body).as[List[Campaign]].filter(campaign => {
         // Is the number of rules less than or equal to the limit?
-        campaign.rules.length <= ruleLimit &&
+        ruleLimit.map(campaign.rules.length <= _).getOrElse(true) &&
         // And all of the rules have too many required or lacking tags
-        campaign.rules.forall(rule => rule.requiredTags.length + rule.lackingTags.length <= tagLimit)
+        tagLimit.map(limit => campaign.rules.forall(rule => rule.requiredTags.length + rule.lackingTags.length <= limit)).getOrElse(true)
       })
 
       CampaignCache(campaigns, totalCampaigns)

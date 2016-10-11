@@ -22,4 +22,12 @@ class CampaignTests extends FreeSpec with Matchers {
     val campaign = Campaign(id, "name", rules, 10, None, None, false, badgeFields)
     Campaign.fromJson(Json.toJson(campaign)) should equal(campaign)
   }
+
+  ".getFieldType" - {
+    "should return a campaigns type" in {
+      val emailFields = EmailFields("testName", "testTheme", "testAbout", "testDescription", "testFrequency", "testListId")
+      val campaign = Campaign(id, "name", rules, 10, None, None, false, emailFields)
+      Campaign.getFieldType(campaign) should equal(Some(Fields.emailType))
+    }
+  }
 }

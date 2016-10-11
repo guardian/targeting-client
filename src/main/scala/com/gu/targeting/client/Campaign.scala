@@ -57,6 +57,7 @@ object Campaign {
   def getFieldType(campaign: Campaign): Option[String] = {
     campaign.fields match {
       case _: EmailFields => Some(Fields.emailType)
+      case _: BadgeFields => Some(Fields.badgeType)
       case _ => None
     }
   }

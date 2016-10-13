@@ -18,7 +18,7 @@ class CampaignTests extends FreeSpec with Matchers {
   }
 
   "Campaign should convert badge campaigns to JSON correctly" in {
-    val badgeFields = BadgeFields("testTag", "badgeUrl", None)
+    val badgeFields = BadgeFields("badgeUrl", None)
     val campaign = Campaign(id, "name", rules, 10, None, None, false, badgeFields)
     Campaign.fromJson(Json.toJson(campaign)) should equal(campaign)
   }

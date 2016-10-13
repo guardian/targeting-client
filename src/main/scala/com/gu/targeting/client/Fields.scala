@@ -6,7 +6,7 @@ import play.api.libs.functional.syntax._
 trait Fields
 
 case class EmailFields(name: String, theme: String, about: String, description: String, frequency: String, listId: String) extends Fields
-case class BadgeFields(seriesTag: String, imageUrl: String, classModifier: Option[String]) extends Fields
+case class BadgeFields(imageUrl: String, classModifier: Option[String]) extends Fields
 
 // Add more fields here as applicable
 
@@ -20,7 +20,6 @@ object Fields {
   val allTypes = List(emailType, badgeType)
 
   val badgeFormat = (
-      (JsPath \ "seriesTag").format[String] and
       (JsPath \ "imageUrl").format[String] and
       (JsPath \ "classModifier").formatNullable[String]
     )(BadgeFields.apply, unlift(BadgeFields.unapply))

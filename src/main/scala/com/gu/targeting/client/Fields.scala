@@ -7,7 +7,7 @@ trait Fields
 
 case class EmailFields(name: String, theme: String, about: String, description: String, frequency: String, listId: String) extends Fields
 case class BadgeFields(seriesTag: String, imageUrl: String, classModifier: Option[String]) extends Fields
-case class EpicFields(name: String) extends Fields
+case class EpicFields(campaignId: String) extends Fields
 
 // Add more fields here as applicable
 

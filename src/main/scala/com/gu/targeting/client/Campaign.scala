@@ -58,6 +58,7 @@ object Campaign {
     campaign.fields match {
       case _: EmailFields => Some(Fields.emailType)
       case _: BadgeFields => Some(Fields.badgeType)
+      case _: EpicFields => Some(Fields.epicType)
       case _ => None
     }
   }

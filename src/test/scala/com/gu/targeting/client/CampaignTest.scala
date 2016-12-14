@@ -7,7 +7,7 @@ import org.scalatest.{FreeSpec, Matchers}
 class CampaignTests extends FreeSpec with Matchers {
   val requiredTags = List("should/exist", "also/exists")
   val lackingTags = List("not/this", "also/not-this")
-  val rules = List(Rule(requiredTags, lackingTags))
+  val rules = List(Rule(requiredTags, lackingTags, false))
 
   val id = UUID.randomUUID()
 

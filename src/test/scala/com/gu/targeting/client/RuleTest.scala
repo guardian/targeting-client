@@ -6,7 +6,7 @@ class RuleTest extends FreeSpec with Matchers {
   val tagsToMatch = List("should_match_1", "should_match_2")
   val tagsToExclude = List("should_exclude_1", "should_exclude_2")
 
-  val rule = Rule(tagsToMatch, tagsToExclude)
+  val rule = Rule(tagsToMatch, tagsToExclude, false)
 
   "A rule" - {
     "when evaluated" - {

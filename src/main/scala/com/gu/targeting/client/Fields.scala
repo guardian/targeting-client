@@ -8,6 +8,7 @@ trait Fields
 case class EmailFields(name: String, theme: String, about: String, description: String, frequency: String, listId: String) extends Fields
 case class BadgeFields(seriesTag: String, imageUrl: String, classModifier: Option[String]) extends Fields
 case class EpicFields(campaignId: String) extends Fields
+case class ReportFields(campaignId: String) extends Fields
 
 // Add more fields here as applicable
 
@@ -18,8 +19,9 @@ object Fields {
   val emailType = "email"
   val badgeType = "badge"
   val epicType = "epic"
+  val reportType = "report"
 
-  val allTypes = List(emailType, badgeType, epicType)
+  val allTypes = List(emailType, badgeType, epicType, reportType)
 
   val badgeFormat = (
       (JsPath \ "seriesTag").format[String] and
@@ -38,15 +40,17 @@ object Fields {
 
   val epicFormat = Json.format[EpicFields]
 
+  val reportFormat = Json.format[ReportFields]
+
   val fieldWrites = new Writes[Fields] {
     override def writes(field: Fields): JsValue = {
       field match {
         case f: EmailFields => emailFormat.writes(f) + (reservedTypeField, JsString(emailType))
         case f: BadgeFields => badgeFormat.writes(f) + (reservedTypeField, JsString(badgeType))
         case f: EpicFields => epicFormat.writes(f) + (reservedTypeField, JsString(epicType))
-        case other => {
+        case f: ReportFields => reportFormat.writes(f) + (reservedTypeField, JsString(reportType))
+        case other =>
           throw new UnsupportedOperationException(s"Unable to serialize field of type ${other.getClass}")
-        }
       }
     }
   }
@@ -57,6 +61,7 @@ object Fields {
         case JsString(`emailType`) => emailFormat.reads(json)
         case JsString(`badgeType`) => badgeFormat.reads(json)
         case JsString(`epicType`) => epicFormat.reads(json)
+        case JsString(`reportType`) => reportFormat.reads(json)
         case other => JsError(s"Unexpected step type value: $other")
       }
     }

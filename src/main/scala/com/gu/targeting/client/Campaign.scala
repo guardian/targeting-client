@@ -34,7 +34,7 @@ object Campaign {
     (JsPath \ "fields").format[Fields]
   )(Campaign.apply, unlift(Campaign.unapply))
 
-  def fromJson(json: JsValue) = {
+  def fromJson(json: JsValue): Campaign = {
     json.as[Campaign]
   }
 
@@ -59,6 +59,7 @@ object Campaign {
       case _: EmailFields => Some(Fields.emailType)
       case _: BadgeFields => Some(Fields.badgeType)
       case _: EpicFields => Some(Fields.epicType)
+      case _: ReportFields => Some(Fields.reportType)
       case _ => None
     }
   }
@@ -98,9 +99,9 @@ object CampaignCache {
 
       val campaigns = Json.parse(body).as[List[Campaign]].filter(campaign => {
         // Is the number of rules less than or equal to the limit?
-        ruleLimit.map(campaign.rules.length <= _).getOrElse(true) &&
+        ruleLimit.forall(campaign.rules.length <= _) &&
         // And all of the rules have too many required or lacking tags
-        tagLimit.map(limit => campaign.rules.forall(rule => rule.requiredTags.length + rule.lackingTags.length <= limit)).getOrElse(true)
+        tagLimit.forall(limit => campaign.rules.forall(rule => rule.requiredTags.length + rule.lackingTags.length <= limit))
       })
 
       CampaignCache(campaigns, totalCampaigns)

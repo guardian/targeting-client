@@ -9,6 +9,9 @@ case class EmailFields(name: String, theme: String, about: String, description: 
 case class BadgeFields(seriesTag: String, imageUrl: String, classModifier: Option[String]) extends Fields
 case class EpicFields(campaignId: String) extends Fields
 case class ReportFields(campaignId: String) extends Fields
+case class SurveyFields(campaignId: String, questions: Seq[QuestionFieldSet]) extends Fields
+
+case class QuestionFieldSet(question: String, askWhy: Boolean)
 
 // Add more fields here as applicable
 
@@ -20,8 +23,9 @@ object Fields {
   val badgeType = "badge"
   val epicType = "epic"
   val reportType = "report"
+  val surveyType = "survey"
 
-  val allTypes = List(emailType, badgeType, epicType, reportType)
+  val allTypes = List(emailType, badgeType, epicType, reportType, surveyType)
 
   val badgeFormat = (
       (JsPath \ "seriesTag").format[String] and
@@ -42,6 +46,10 @@ object Fields {
 
   val reportFormat = Json.format[ReportFields]
 
+  implicit val questionFormat = Json.format[QuestionFieldSet]
+  
+  val surveyFormat = Json.format[SurveyFields]
+
   val fieldWrites = new Writes[Fields] {
     override def writes(field: Fields): JsValue = {
       field match {
@@ -49,6 +57,7 @@ object Fields {
         case f: BadgeFields => badgeFormat.writes(f) + (reservedTypeField, JsString(badgeType))
         case f: EpicFields => epicFormat.writes(f) + (reservedTypeField, JsString(epicType))
         case f: ReportFields => reportFormat.writes(f) + (reservedTypeField, JsString(reportType))
+        case f: SurveyFields => surveyFormat.writes(f) + (reservedTypeField, JsString(surveyType))
         case other =>
           throw new UnsupportedOperationException(s"Unable to serialize field of type ${other.getClass}")
       }
@@ -62,6 +71,7 @@ object Fields {
         case JsString(`badgeType`) => badgeFormat.reads(json)
         case JsString(`epicType`) => epicFormat.reads(json)
         case JsString(`reportType`) => reportFormat.reads(json)
+        case JsString(`surveyType`) => surveyFormat.reads(json)
         case other => JsError(s"Unexpected step type value: $other")
       }
     }

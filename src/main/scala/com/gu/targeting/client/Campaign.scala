@@ -60,6 +60,7 @@ object Campaign {
       case _: BadgeFields => Some(Fields.badgeType)
       case _: EpicFields => Some(Fields.epicType)
       case _: ReportFields => Some(Fields.reportType)
+      case _: SurveyFields => Some(Fields.surveyType)
       case _ => None
     }
   }

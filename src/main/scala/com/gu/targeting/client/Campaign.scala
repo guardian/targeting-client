@@ -66,8 +66,10 @@ object Campaign {
 }
 
 case class CampaignCache(campaigns: List[Campaign], totalCampaigns: Option[Int]) {
-  def getCampaignsForTags(tags: Seq[String]): List[Campaign] = {
-    campaigns.filter(c => c.rules.exists(r => Rule.evaluate(r, tags)))
+  def getCampaignsForTags(tags: Seq[String], stripRules: Boolean = false): List[Campaign] = {
+    campaigns.filter(c => c.rules.exists(r => Rule.evaluate(r, tags))).map { c =>
+      if (stripRules) c.copy(rules = Nil) else c
+    }
   }
 }
 

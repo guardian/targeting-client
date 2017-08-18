@@ -23,20 +23,9 @@ object Fields {
 
   val allTypes = List(emailType, badgeType, epicType, reportType)
 
-  val badgeFormat = (
-      (JsPath \ "seriesTag").format[String] and
-      (JsPath \ "imageUrl").format[String] and
-      (JsPath \ "classModifier").formatNullable[String]
-    )(BadgeFields.apply, unlift(BadgeFields.unapply))
+  val badgeFormat = Json.format[BadgeFields]
 
-  val emailFormat = (
-      (JsPath \ "name").format[String] and
-      (JsPath \ "theme").format[String] and
-      (JsPath \ "about").format[String] and
-      (JsPath \ "description").format[String] and
-      (JsPath \ "frequency").format[String] and
-      (JsPath \ "listId").format[String]
-    )(EmailFields.apply, unlift(EmailFields.unapply))
+  val emailFormat = Json.format[EmailFields]
 
   val epicFormat = Json.format[EpicFields]
 

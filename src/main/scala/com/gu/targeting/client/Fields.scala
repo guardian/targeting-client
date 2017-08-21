@@ -9,9 +9,9 @@ case class EmailFields(name: String, theme: String, about: String, description: 
 case class BadgeFields(seriesTag: String, imageUrl: String, classModifier: Option[String]) extends Fields
 case class EpicFields(campaignId: String) extends Fields
 case class ReportFields(campaignId: String) extends Fields
-case class SurveyFields(campaignId: String, questions: Seq[QuestionFieldSet]) extends Fields
+case class SurveyFields(campaignId: String, questions: Seq[SurveyQuestion]) extends Fields
 
-case class QuestionFieldSet(question: String, askWhy: Boolean)
+case class SurveyQuestion(question: String, askWhy: Boolean)
 
 // Add more fields here as applicable
 
@@ -46,7 +46,7 @@ object Fields {
 
   val reportFormat = Json.format[ReportFields]
 
-  implicit val questionFormat = Json.format[QuestionFieldSet]
+  implicit val questionFormat = Json.format[SurveyQuestion]
   
   val surveyFormat = Json.format[SurveyFields]
 

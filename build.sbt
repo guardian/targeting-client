@@ -9,6 +9,7 @@ description in ThisBuild := "Handles the creation and application of campaigns a
 scalacOptions ++= Seq("-feature", "-deprecation")
 
 val publishSettings = Seq(
+  publishArtifact := true,
   publishMavenStyle := true,
   publishTo := Some(
     if (isSnapshot.value)

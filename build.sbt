@@ -35,8 +35,8 @@ val publishSettings = Seq(
     tagRelease,
     setNextVersion,
     commitNextVersion,
-    releaseStepCommand("sonatypeReleaseAll"),
-    pushChanges
+    //releaseStepCommand("sonatypeReleaseAll"),
+    //pushChanges
   )
 )
 

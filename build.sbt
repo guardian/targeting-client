@@ -43,6 +43,7 @@ val publishSettings = Seq(
 
 lazy val root = (project in file("."))
   .aggregate(targetingClientPlay25, targetingClientPlay26)
+  .settings(publishSettings)
   .settings(publishArtifact := false)
   .settings(skip in publish := true)
   .settings(skip in compile := true)

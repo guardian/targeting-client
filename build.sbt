@@ -1,58 +1,56 @@
 import Dependencies._
+import ReleaseTransformations._
 
-scalaVersion in ThisBuild := "2.11.8"
+name := "targeting-client-play26"
 
-description in ThisBuild := "Handles the creation and application of campaigns and their rules for The Guardians targeting system"
+organization := "com.gu"
+
+scalaVersion := "2.12.3"
 
 scalacOptions ++= Seq("-feature", "-deprecation")
 
-val bintraySettings = Seq(
-  publishMavenStyle := true,
-  bintrayOrganization := Some("guardian"),
-  bintrayRepository := "editorial-tools",
-  licenses += ("Apache-2.0", url("https://github.com/guardian/tags-thrift-schema/blob/master/LICENSE"))
-  )
+libraryDependencies ++= Seq(
+  awsSdk,
+  commonsIo,
+  scalatic,
+  scalaTest,
+  http,
+  playJson26
+)
 
-lazy val targetingClientPlay24 = project.in(file("targeting-client-play24"))
-  .enablePlugins(BuildInfoPlugin)
-  .settings(bintraySettings: _*)
-  .settings(
-    name := "targeting-client-play24",
-    organization := "com.gu",
-    publishArtifact := true,
-    sourceDirectory := baseDirectory.value / "../src",
+releaseCrossBuild := true
 
-    buildInfoKeys := Seq[BuildInfoKey](version),
-    buildInfoPackage := "com.gu.targeting.client",
+crossScalaVersions := Seq(scalaVersion.value, "2.11.11")
 
-    libraryDependencies ++= Seq(
-      awsSdk,
-      commonsIo,
-      scalatic,
-      scalaTest,
-      http,
-      playJson24
-    )
-  )
+publishArtifact in Test := false
 
-lazy val targetingClient = project.in(file("."))
-  .enablePlugins(BuildInfoPlugin)
-  .settings(bintraySettings: _*)
-  .settings(
-    name := "targeting-client",
-    organization := "com.gu",
-    publishArtifact := true,
+publishMavenStyle := true
 
-    buildInfoKeys := Seq[BuildInfoKey](version),
-    buildInfoPackage := "com.gu.targeting.client",
+publishTo := Some(
+  if (isSnapshot.value) Opts.resolver.sonatypeSnapshots
+  else Opts.resolver.sonatypeReleases
+)
 
-    libraryDependencies ++= Seq(
-      awsSdk,
-      commonsIo,
-      scalatic,
-      scalaTest,
-      http,
-      playJson25
-    )
-  )
+licenses := Seq("Apache V2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"))
 
+scmInfo := Some(ScmInfo(
+  url("https://github.com/guardian/targeting-client"),
+  "scm:git:git@github.com:guardian/targeting-client.git"
+))
+
+releasePublishArtifactsAction := PgpKeys.publishSigned.value
+
+releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  runTest,
+  setReleaseVersion,
+  commitReleaseVersion,
+  tagRelease,
+  publishArtifacts,
+  setNextVersion,
+  commitNextVersion,
+  releaseStepCommand("sonatypeReleaseAll"),
+  pushChanges
+)

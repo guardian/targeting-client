@@ -13,12 +13,13 @@ Sonatype.sonatypeSettings
 val publishSettings = Seq(
   publishArtifact := true,
   publishMavenStyle := true,
-//  publishTo := Some(
-//    if (isSnapshot.value)
-//      Opts.resolver.sonatypeSnapshots
-//    else
-//      Opts.resolver.sonatypeStaging
-//  ),
+  publishTo := Some(
+    if (isSnapshot.value)
+      Opts.resolver.sonatypeSnapshots
+    else
+      Opts.resolver.sonatypeReleases
+  ),
+  resolvers += Resolver.sonatypeRepo("releases"),
   licenses := Seq("Apache V2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")),
   scmInfo := Some(ScmInfo(
     url("https://github.com/guardian/targeting-client"),
@@ -38,6 +39,7 @@ val publishSettings = Seq(
     tagRelease,
     setNextVersion,
     commitNextVersion,
+    publishArtifacts,
     releaseStepCommand("sonatypeReleaseAll"),
     pushChanges
   )

@@ -11,6 +11,7 @@ scalacOptions ++= Seq("-feature", "-deprecation")
 Sonatype.sonatypeSettings
 
 val publishSettings = Seq(
+  releaseCrossBuild := true,
   publishArtifact := true,
   publishMavenStyle := true,
   publishTo := Some(

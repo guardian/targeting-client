@@ -31,5 +31,5 @@ Campaign types are expressed as a set of fields. To add a new set of fields edit
 
 # Publishing a new version
 
-1. Get access to oss.sonatype.org (ask a Dev Manager/team member if unsure on this - there is a doc)
-2. Run `sbt + release`
+1. Get access to oss.sonatype.org (ask a Dev Manager/team member if unsure on this - there is a []doc on this](https://docs.google.com/document/d/1M_MiE8qntdDn97QIRnIUci5wdVQ8_defCqpeAwoKY8g/edit#heading=h.7n25tzj28wmr))
+2. Run `sbt release`

@@ -17,6 +17,12 @@ class CampaignTests extends FreeSpec with Matchers {
     Campaign.fromJson(Json.toJson(campaign)) should equal(campaign)
   }
 
+  "Campaign should convert tip campaigns to JSON correctly" in {
+    val tipFields = TipFields("testCallout", "testEmbed")
+    val campaign = Campaign(id, "name", rules, 10, None, None, false, tipFields)
+    Campaign.fromJson(Json.toJson(campaign)) should equal(campaign)
+  }
+
   "Campaign should convert survey campaigns to JSON correctly" in {
     val surveyFields = SurveyFields("testName", Seq(
       SurveyQuestion("testQuestion1", true),

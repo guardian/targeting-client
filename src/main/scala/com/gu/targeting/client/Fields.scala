@@ -10,7 +10,7 @@ case class BadgeFields(seriesTag: String, imageUrl: String, classModifier: Optio
 case class EpicFields(campaignId: String) extends Fields
 case class ReportFields(campaignId: String) extends Fields
 case class SurveyFields(campaignId: String, questions: Seq[SurveyQuestion]) extends Fields
-case class TipFields(callout: String, formId: Int, fields: JsValue) extends Fields
+case class ParticipationFields(callout: String, formId: Int, formFields: JsValue) extends Fields
 
 case class SurveyQuestion(question: String, askWhy: Boolean)
 
@@ -25,9 +25,9 @@ object Fields {
   val epicType = "epic"
   val reportType = "report"
   val surveyType = "survey"
-  val tipType = "tip"
+  val participationType = "tip"
 
-  val allTypes = List(emailType, badgeType, epicType, reportType, surveyType, tipType)
+  val allTypes = List(emailType, badgeType, epicType, reportType, surveyType, participationType)
 
   val badgeFormat = Json.format[BadgeFields]
 
@@ -41,7 +41,7 @@ object Fields {
   
   val surveyFormat = Json.format[SurveyFields]
 
-  val tipFormat = Json.format[TipFields]
+  val participationFormat = Json.format[ParticipationFields]
 
   val fieldWrites = new Writes[Fields] {
     override def writes(field: Fields): JsValue = {
@@ -51,7 +51,7 @@ object Fields {
         case f: EpicFields => epicFormat.writes(f) + (reservedTypeField, JsString(epicType))
         case f: ReportFields => reportFormat.writes(f) + (reservedTypeField, JsString(reportType))
         case f: SurveyFields => surveyFormat.writes(f) + (reservedTypeField, JsString(surveyType))
-        case f: TipFields => tipFormat.writes(f) + (reservedTypeField, JsString(tipType))
+        case f: ParticipationFields => participationFormat.writes(f) + (reservedTypeField, JsString(participationType))
         case other =>
           throw new UnsupportedOperationException(s"Unable to serialize field of type ${other.getClass}")
       }
@@ -66,7 +66,7 @@ object Fields {
         case JsString(`epicType`) => epicFormat.reads(json)
         case JsString(`reportType`) => reportFormat.reads(json)
         case JsString(`surveyType`) => surveyFormat.reads(json)
-        case JsString(`tipType`) => tipFormat.reads(json)
+        case JsString(`participationType`) => participationFormat.reads(json)
         case other => JsError(s"Unexpected step type value: $other")
       }
     }

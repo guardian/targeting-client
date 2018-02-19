@@ -61,6 +61,7 @@ object Campaign {
       case _: EpicFields => Some(Fields.epicType)
       case _: ReportFields => Some(Fields.reportType)
       case _: SurveyFields => Some(Fields.surveyType)
+      case _: ParticipationFields => Some(Fields.participationType)
       case _ => None
     }
   }

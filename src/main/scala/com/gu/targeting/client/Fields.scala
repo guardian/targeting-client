@@ -25,7 +25,7 @@ object Fields {
   val epicType = "epic"
   val reportType = "report"
   val surveyType = "survey"
-  val participationType = "tip"
+  val participationType = "callout"
 
   val allTypes = List(emailType, badgeType, epicType, reportType, surveyType, participationType)
 

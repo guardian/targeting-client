@@ -1,7 +1,9 @@
 import sbt._
 
 object Dependencies {
-  val awsSdk = "com.amazonaws" % "aws-java-sdk" % "1.11.26"
+  val awsSdkVersion = "1.11.26"
+  val dynamodb = "com.amazonaws" % "aws-java-sdk-dynamodb" % awsSdkVersion
+
   val commonsIo = "org.apache.commons" % "commons-io" % "1.3.2"
   val scalatic = "org.scalactic" %% "scalactic" % "3.0.4"
   val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4" % "test"

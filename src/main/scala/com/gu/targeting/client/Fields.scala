@@ -10,7 +10,7 @@ case class BadgeFields(seriesTag: String, imageUrl: String, classModifier: Optio
 case class EpicFields(campaignId: String) extends Fields
 case class ReportFields(campaignId: String) extends Fields
 case class SurveyFields(campaignId: String, questions: Seq[SurveyQuestion]) extends Fields
-case class ParticipationFields(callout: String, formId: Int, tagName: String, description: Option[String], formFields: JsValue) extends Fields
+case class ParticipationFields(callout: String, formId: Int, tagName: String, description: Option[String], formFields: JsValue, formUrl: Option[String]) extends Fields
 
 case class SurveyQuestion(question: String, askWhy: Boolean)
 

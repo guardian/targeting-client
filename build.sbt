@@ -5,7 +5,7 @@ name := "targeting-client-play26"
 
 organization := "com.gu"
 
-scalaVersion := "2.12.3"
+scalaVersion := "2.12.8"
 
 scalacOptions ++= Seq("-feature", "-deprecation")
 
@@ -20,7 +20,7 @@ libraryDependencies ++= Seq(
 
 releaseCrossBuild := true
 
-crossScalaVersions := Seq(scalaVersion.value, "2.11.11")
+crossScalaVersions := Seq(scalaVersion.value, "2.11.12")
 
 publishArtifact in Test := false
 

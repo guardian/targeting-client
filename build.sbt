@@ -26,11 +26,6 @@ publishArtifact in Test := false
 
 publishMavenStyle := true
 
-publishTo := Some(
-  if (isSnapshot.value) Opts.resolver.sonatypeSnapshots
-  else Opts.resolver.sonatypeReleases
-)
-
 licenses := Seq("Apache V2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"))
 
 scmInfo := Some(ScmInfo(

@@ -35,6 +35,13 @@ scmInfo := Some(ScmInfo(
   "scm:git:git@github.com:guardian/targeting-client.git"
 ))
 
+developers := List(Developer(
+  id = "Guardian Digital Department",
+  name = "Guardian Digital Department",
+  email = "userhelp@theguardian.com",
+  url = new URL("https://github.com/guardian")
+))
+
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 
 releaseProcess := Seq[ReleaseStep](
@@ -51,19 +58,3 @@ releaseProcess := Seq[ReleaseStep](
   releaseStepCommand("sonatypeReleaseAll"),
   pushChanges
 )
-
-pomExtra := (
-  <url>https://github.com/guardian/targeting-client</url>
-    <scm>
-      <connection>scm:git@github.com:guardian/targeting-client.git</connection>
-      <developerConnection>scm:git@github.com:guardian/targeting-client.git</developerConnection>
-      <url>git@github.com:guardian/targeting-client.git</url>
-    </scm>
-    <developers>
-      <developer>
-        <id>Guardian Digital Department</id>
-        <name>Guardian Digital Department</name>
-        <url>https://github.com/guardian</url>
-      </developer>
-    </developers>
-  )

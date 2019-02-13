@@ -51,3 +51,19 @@ releaseProcess := Seq[ReleaseStep](
   releaseStepCommand("sonatypeReleaseAll"),
   pushChanges
 )
+
+pomExtra := (
+  <url>https://github.com/guardian/targeting-client</url>
+    <scm>
+      <connection>scm:git@github.com:guardian/targeting-client.git</connection>
+      <developerConnection>scm:git@github.com:guardian/targeting-client.git</developerConnection>
+      <url>git@github.com:guardian/targeting-client.git</url>
+    </scm>
+    <developers>
+      <developer>
+        <id>Guardian Digital Department</id>
+        <name>Guardian Digital Department</name>
+        <url>https://github.com/guardian</url>
+      </developer>
+    </developers>
+  )

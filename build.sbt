@@ -35,11 +35,13 @@ scmInfo := Some(ScmInfo(
   "scm:git:git@github.com:guardian/targeting-client.git"
 ))
 
+homepage := Some(url("https://github.com/guardian/targeting-client"))
+
 developers := List(Developer(
   id = "Guardian Digital Department",
   name = "Guardian Digital Department",
   email = "userhelp@theguardian.com",
-  url = new URL("https://github.com/guardian")
+  url = url("https://github.com/guardian")
 ))
 
 releasePublishArtifactsAction := PgpKeys.publishSigned.value

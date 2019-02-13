@@ -26,6 +26,8 @@ publishArtifact in Test := false
 
 publishMavenStyle := true
 
+resolvers += Resolver.sonatypeRepo("releases")
+
 licenses := Seq("Apache V2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"))
 
 scmInfo := Some(ScmInfo(

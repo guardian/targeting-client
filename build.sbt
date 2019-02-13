@@ -26,7 +26,7 @@ publishArtifact in Test := false
 
 publishMavenStyle := true
 
-resolvers += Resolver.sonatypeRepo("releases")
+publishTo := sonatypePublishTo.value
 
 licenses := Seq("Apache V2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"))
 

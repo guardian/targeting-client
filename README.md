@@ -8,7 +8,7 @@ To use this library add the following to your dependency libraries in your proje
 
 `"com.gu" %% "targeting-client" % "0.1.0"`
 
-Instead of version `0.1.0` insert the version you'd like to use (probably the latest). For a full listing of versions check [here](https://bintray.com/guardian/editorial-tools/targeting-client).
+Instead of version `0.1.0` insert the version you'd like to use (probably the latest). 
 
 
 # Adding a new Campaign Type

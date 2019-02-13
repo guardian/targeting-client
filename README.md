@@ -10,9 +10,6 @@ To use this library add the following to your dependency libraries in your proje
 
 Instead of version `0.1.0` insert the version you'd like to use (probably the latest). For a full listing of versions check [here](https://bintray.com/guardian/editorial-tools/targeting-client).
 
-Some people have issues accessing the BinTray jcenter repository, usually this can be fixed by adding the following to your `build.sbt`:
-
-`resolvers += "Guardian Bintray" at "https://dl.bintray.com/guardian/editorial-tools"`
 
 # Adding a new Campaign Type
 

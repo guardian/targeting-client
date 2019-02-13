@@ -10,7 +10,7 @@ scalaVersion := "2.12.8"
 scalacOptions ++= Seq("-feature", "-deprecation")
 
 libraryDependencies ++= Seq(
-  awsSdk,
+  dynamodb,
   commonsIo,
   scalatic,
   scalaTest,

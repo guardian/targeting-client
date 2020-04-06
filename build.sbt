@@ -10,7 +10,6 @@ scalaVersion := "2.13.1"
 scalacOptions ++= Seq("-feature", "-deprecation")
 
 libraryDependencies ++= Seq(
-  dynamodb,
   commonsIo,
   scalatic,
   scalaTest,

@@ -1,14 +1,11 @@
 package com.gu.targeting.client
 
 import java.util.UUID
-import org.apache.http.client.methods.{CloseableHttpResponse, HttpGet}
+import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.HttpClients
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
-import com.amazonaws.services.dynamodbv2.document.Item
-import org.joda.time.DateTime
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.Source
 import scala.util.Try
 
@@ -44,14 +41,6 @@ object Campaign {
 
   def toJson(campaigns: List[Campaign]): JsValue = {
     Json.toJson[List[Campaign]](campaigns)
-  }
-
-  def fromItem(item: Item): Campaign = {
-    Json.parse(item.toJSON).as[Campaign]
-  }
-
-  def toItem(campaign: Campaign): Item = {
-    Item.fromJSON(Json.toJson(campaign).toString())
   }
 
   def getFieldType(campaign: Campaign): Option[String] = {

@@ -1,16 +1,15 @@
 import Dependencies._
 import ReleaseTransformations._
 
-name := "targeting-client-play26"
+name := "targeting-client"
 
 organization := "com.gu"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.13.1"
 
 scalacOptions ++= Seq("-feature", "-deprecation")
 
 libraryDependencies ++= Seq(
-  dynamodb,
   commonsIo,
   scalatic,
   scalaTest,
@@ -20,7 +19,7 @@ libraryDependencies ++= Seq(
 
 releaseCrossBuild := true
 
-crossScalaVersions := Seq(scalaVersion.value, "2.11.12")
+crossScalaVersions := Seq(scalaVersion.value, "2.12.11", "2.11.12")
 
 publishArtifact in Test := false
 

@@ -1,14 +1,13 @@
 package com.gu.targeting.client
 
 import java.util.UUID
-import org.apache.http.client.methods.{CloseableHttpResponse, HttpGet}
+
+import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.HttpClients
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
-import com.amazonaws.services.dynamodbv2.document.Item
-import org.joda.time.DateTime
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+
+import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
 import scala.util.Try
 
@@ -46,14 +45,6 @@ object Campaign {
     Json.toJson[List[Campaign]](campaigns)
   }
 
-  def fromItem(item: Item): Campaign = {
-    Json.parse(item.toJSON).as[Campaign]
-  }
-
-  def toItem(campaign: Campaign): Item = {
-    Item.fromJSON(Json.toJson(campaign).toString())
-  }
-
   def getFieldType(campaign: Campaign): Option[String] = {
     campaign.fields match {
       case _: EmailFields => Some(Fields.emailType)
@@ -83,8 +74,9 @@ object CampaignCache {
    * @param limit truncate the number of campaigns to this number
    * @param ruleLimit Any campaigns with more rules than this number will be dropped from the results
    * @param tagLimit Any campaigns with any rules with more tags (requiredTags + lackingTags) than this number will be dropped
+   * @param ec The execution context that will execute the blocking HTTP request
    */
-  def fetch(url: String, limit: Int = 100, ruleLimit: Option[Int] = None, tagLimit: Option[Int] = None): Future[CampaignCache] = {
+  def fetch(url: String, limit: Int = 100, ruleLimit: Option[Int] = None, tagLimit: Option[Int] = None)(implicit ec: ExecutionContext): Future[CampaignCache] = {
     val queryUrl = url + s"?activeOnly=true&limit=$limit&types=${Fields.allTypes.mkString(",")}"
 
     Future {

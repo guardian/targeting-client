@@ -1,10 +1,12 @@
 package com.gu.targeting.client
 
 import java.util.UUID
-import play.api.libs.json._
-import org.scalatest.{FreeSpec, Matchers}
 
-class CampaignTests extends FreeSpec with Matchers {
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
+import play.api.libs.json._
+
+class CampaignTests extends AnyFreeSpec with Matchers {
   val requiredTags = List("should/exist", "also/exists")
   val lackingTags = List("not/this", "also/not-this")
   val rules = List(Rule(requiredTags, lackingTags, false))

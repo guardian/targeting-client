@@ -14,12 +14,12 @@ libraryDependencies ++= Seq(
   scalatic,
   scalaTest,
   http,
-  playJson26
+  playJson
 )
 
 releaseCrossBuild := true
 
-crossScalaVersions := Seq(scalaVersion.value, "2.12.11", "2.11.12")
+crossScalaVersions := Seq(scalaVersion.value, "2.12.11")
 
 publishArtifact in Test := false
 

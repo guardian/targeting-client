@@ -6,9 +6,9 @@ This repository contains shared code used by targeting, frontend, and MAPI to cr
 
 |Targeting Client Version|Play Version|Scala Version     |Artefact                                            |
 |------------------------|------------|------------------|----------------------------------------------------|
-|0.14.8                  |2.6         |2.11 & 2.12       |"com.gu" % "targeting-client-play26_2.11" % "0.14.8"|
-|1.0.x                   |2.7         |2.11 & 2.12 & 2.13|"com.gu" % "targeting-client_2.11" % "1.0.0"        |
-|1.1.x                   |2.8         |2.12 & 2.13       |"com.gu" % "targeting-client_2.11" % "1.1.0"        |
+|0.14.8                  |2.6         |2.11 & 2.12       |"com.gu" % "targeting-client-play26" %% "0.14.8"    |
+|1.0.x                   |2.7         |2.11 & 2.12 & 2.13|"com.gu" % "targeting-client" %% "1.0.0"            |
+|1.1.x                   |2.8         |2.12 & 2.13       |"com.gu" % "targeting-client" %% "1.1.0"            |
 
 # Usage
 

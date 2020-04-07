@@ -6,5 +6,5 @@ object Dependencies {
   val scalaTest = "org.scalatest" %% "scalatest" % "3.1.1" % "test"
   val http = "org.apache.httpcomponents" % "httpclient" % "4.5.12"
 
-  val playJson26 = "com.typesafe.play" %% "play-json" % "2.7.4"
+  val playJson = "com.typesafe.play" %% "play-json" % "2.8.1"
 }

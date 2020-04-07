@@ -2,6 +2,14 @@
 
 This repository contains shared code used by targeting, frontend, and MAPI to create and process targeted campaigns.
 
+# Version mapping
+
+|Targeting Client Version|Play Version|Scala Version|
+|-|-|-|
+|0.14.8|2.6|2.11 & 2.12|
+|1.0.x|2.7|2.11 & 2.12 & 2.13|
+|1.1.x|2.8|2.12 & 2.13|
+
 # Usage
 
 To use this library add the following to your dependency libraries in your projects `build.sbt`:

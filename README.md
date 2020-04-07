@@ -4,17 +4,17 @@ This repository contains shared code used by targeting, frontend, and MAPI to cr
 
 # Version mapping
 
-|Targeting Client Version|Play Version|Scala Version|
-|-|-|-|
-|0.14.8|2.6|2.11 & 2.12|
-|1.0.x|2.7|2.11 & 2.12 & 2.13|
-|1.1.x|2.8|2.12 & 2.13|
+|Targeting Client Version|Play Version|Scala Version     |Artefact                                            |
+|------------------------|------------|------------------|----------------------------------------------------|
+|0.14.8                  |2.6         |2.11 & 2.12       |"com.gu" % "targeting-client-play26_2.11" % "0.14.8"|
+|1.0.x                   |2.7         |2.11 & 2.12 & 2.13|"com.gu" % "targeting-client_2.11" % "1.0.0"        |
+|1.1.x                   |2.8         |2.12 & 2.13       |"com.gu" % "targeting-client_2.11" % "1.1.0"        |
 
 # Usage
 
 To use this library add the following to your dependency libraries in your projects `build.sbt`:
 
-`"com.gu" %% "targeting-client" % "0.1.0"`
+`"com.gu" %% "targeting-client" % "1.1.0"`
 
 Instead of version `0.1.0` insert the version you'd like to use (probably the latest). 
 

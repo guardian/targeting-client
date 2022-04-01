@@ -5,27 +5,24 @@ name := "targeting-client"
 
 organization := "com.gu"
 
-scalaVersion := "2.13.1"
+scalaVersion := "2.13.8"
 
 scalacOptions ++= Seq("-feature", "-deprecation")
 
 libraryDependencies ++= Seq(
   commonsIo,
-  scalatic,
   scalaTest,
   http,
   playJson
 )
 
-releaseCrossBuild := true
+crossScalaVersions := Seq(scalaVersion.value, "2.12.15")
 
-crossScalaVersions := Seq(scalaVersion.value, "2.12.11")
-
-publishArtifact in Test := false
+Test / publishArtifact := false
 
 publishMavenStyle := true
 
-publishTo := sonatypePublishTo.value
+publishTo := sonatypePublishToBundle.value
 
 licenses := Seq("Apache V2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"))
 
@@ -43,8 +40,7 @@ developers := List(Developer(
   url = url("https://github.com/guardian")
 ))
 
-releasePublishArtifactsAction := PgpKeys.publishSigned.value
-
+releaseCrossBuild := true // true if you cross-build the project for multiple Scala versions
 releaseProcess := Seq[ReleaseStep](
   checkSnapshotDependencies,
   inquireVersions,
@@ -53,9 +49,10 @@ releaseProcess := Seq[ReleaseStep](
   setReleaseVersion,
   commitReleaseVersion,
   tagRelease,
-  publishArtifacts,
+  // For non cross-build projects, use releaseStepCommand("publishSigned")
+  releaseStepCommandAndRemaining("+publishSigned"),
+  releaseStepCommand("sonatypeBundleRelease"),
   setNextVersion,
   commitNextVersion,
-  releaseStepCommand("sonatypeReleaseAll"),
   pushChanges
 )

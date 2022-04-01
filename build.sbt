@@ -11,7 +11,6 @@ scalacOptions ++= Seq("-feature", "-deprecation")
 
 libraryDependencies ++= Seq(
   commonsIo,
-  scalatic,
   scalaTest,
   http,
   playJson

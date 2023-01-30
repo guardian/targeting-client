@@ -21,7 +21,7 @@ class CampaignTests extends AnyFreeSpec with Matchers {
 
   "Campaign should convert participation campaigns to JSON correctly" in {
     val contactFields = Some(Seq(Contact("Whatsapp", "1245"), Contact("Signal", "0000")))
-    val fields = ParticipationFields("testCallout", 1245, "test-callout-tag", Some("testDescription"), Some("testPrompt"), JsArray(Seq(JsString("one"), JsBoolean(false), JsString("three"))), Some("https://some.url/withAPath"), contactFields)
+    val fields = ParticipationFields("testCallout", 1245, "test-callout-tag", Some("testDescription"), JsArray(Seq(JsString("one"), JsBoolean(false), JsString("three"))), Some("https://some.url/withAPath"), contactFields)
     val campaign = Campaign(id, "name", rules, 10, None, None, false, fields)
     Campaign.fromJson(Json.toJson(campaign)) should equal(campaign)
   }

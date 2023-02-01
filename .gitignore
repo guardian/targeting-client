@@ -62,3 +62,5 @@ sbt-output.txt
 node_modules/
 public/build
 
+.metals/
+.vscode/

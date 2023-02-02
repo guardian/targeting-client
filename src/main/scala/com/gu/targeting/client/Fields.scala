@@ -12,7 +12,7 @@ case class ReportFields(campaignId: String) extends Fields
 case class SurveyFields(campaignId: String, questions: Seq[SurveyQuestion]) extends Fields
 case class ParticipationFields(callout: String, formId: Int, tagName: String, description: Option[String], formFields: JsValue, formUrl: Option[String], contacts: Option[Seq[Contact]]) extends Fields
 
-case class Contact(name: String, value: String)
+case class Contact(name: String, value: String, urlPrefix: String, guidance: Option[String])
 case class SurveyQuestion(question: String, askWhy: Boolean)
 
 // Add more fields here as applicable

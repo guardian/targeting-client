@@ -1,58 +1,45 @@
 import Dependencies._
 import ReleaseTransformations._
+import sbtversionpolicy.withsbtrelease.ReleaseVersion.fromAggregatedAssessedCompatibilityWithLatestRelease
 
 name := "targeting-client"
 
-organization := "com.gu"
-
-scalaVersion := "2.13.8"
-
-scalacOptions ++= Seq("-feature", "-deprecation")
-
-libraryDependencies ++= Seq(
-  commonsIo,
-  scalaTest,
-  http,
-  playJson
+lazy val root = (project in file(".")).aggregate(
+  client_play_json28,
+  client_play_json30,
+).settings(
+  publish / skip := true,
+  sonatypeReleaseSettings
 )
 
-crossScalaVersions := Seq(scalaVersion.value, "2.12.15")
-
-Test / publishArtifact := false
-
-publishMavenStyle := true
-
-publishTo := sonatypePublishToBundle.value
-
-licenses := Seq("Apache V2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"))
-
-scmInfo := Some(ScmInfo(
-  url("https://github.com/guardian/targeting-client"),
-  "scm:git:git@github.com:guardian/targeting-client.git"
-))
-
-homepage := Some(url("https://github.com/guardian/targeting-client"))
-
-developers := List(Developer(
-  id = "Guardian Digital Department",
-  name = "Guardian Digital Department",
-  email = "userhelp@theguardian.com",
-  url = url("https://github.com/guardian")
-))
-
-releaseCrossBuild := true // true if you cross-build the project for multiple Scala versions
-releaseProcess := Seq[ReleaseStep](
-  checkSnapshotDependencies,
-  inquireVersions,
-  runClean,
-  runTest,
-  setReleaseVersion,
-  commitReleaseVersion,
-  tagRelease,
-  // For non cross-build projects, use releaseStepCommand("publishSigned")
-  releaseStepCommandAndRemaining("+publishSigned"),
-  releaseStepCommand("sonatypeBundleRelease"),
-  setNextVersion,
-  commitNextVersion,
-  pushChanges
+val sonatypeReleaseSettings = Seq(
+  licenses := Seq("Apache V2" -> url("https://www.apache.org/licenses/LICENSE-2.0.html")),
+  releaseVersion := fromAggregatedAssessedCompatibilityWithLatestRelease().value,
+  releaseProcess := Seq[ReleaseStep](
+    checkSnapshotDependencies,
+    inquireVersions,
+    runClean,
+    setReleaseVersion,
+    commitReleaseVersion,
+    tagRelease,
+    setNextVersion,
+    commitNextVersion
+  )
 )
+
+def clientWith(playJsonVersion: PlayJsonVersion) =
+  Project(playJsonVersion.projectId, file(playJsonVersion.projectId))
+  .settings(
+    scalaVersion := "2.13.12",
+    organization := "com.gu.targeting-client",
+    scalacOptions ++= Seq("-feature", "-deprecation", "-release:11"),
+    libraryDependencies ++= Seq(
+      commonsIo,
+      scalaTest,
+      http,
+      playJsonVersion.lib
+    )
+  )
+
+lazy val client_play_json28 = clientWith(PlayJsonVersion.V28)
+lazy val client_play_json30 = clientWith(PlayJsonVersion.V30)

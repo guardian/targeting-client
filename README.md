@@ -2,13 +2,27 @@
 
 This repository contains shared code used by targeting, frontend, and MAPI to create and process targeted campaigns.
 
-# Version mapping
+Versions
+--------
 
-|Targeting Client Version|Play Version|Scala Version     |Artefact                                            |
-|------------------------|------------|------------------|----------------------------------------------------|
-|0.14.8                  |2.6         |2.11 & 2.12       |`"com.gu" %% "targeting-client-play26" % "0.14.8"`  |
-|1.0.x                   |2.7         |2.11 & 2.12 & 2.13|`"com.gu" %% "targeting-client" % "1.0.0"`          |
-|1.1.x                   |2.8         |2.12 & 2.13       |`"com.gu" %% "targeting-client" % "1.1.0"`          |
+### Supported Play Versions
+
+* Play **3.0** : use [![targeting-client artifacts](https://index.scala-lang.org/guardian/grid/targeting-client/client-play-json-v30/latest-by-scala-version.svg)](https://index.scala-lang.org/guardian/grid/targeting-client/client-play-json-v28/)
+  ```
+  libraryDependencies += "com.gu.targeting-client" %% "client-play-json-v30" % "[maven version number]"
+  ```
+* Play **2.8** : use [![targeting-client artifacts](https://index.scala-lang.org/guardian/grid/targeting-client/client-play-json-v28/latest-by-scala-version.svg)](https://index.scala-lang.org/guardian/grid/targeting-client/client-play-json-v28/)
+  ```
+  libraryDependencies += "com.gu.targeting-client" %% "client-play-json-v28" % "[maven version number]"
+  ```
+* Play **2.7** : use [![targeting-client artifacts](https://img.shields.io/badge/targeting--client_--_JVM-1.0.0_(Scala_2.13,_2.12,_2.11)-green.svg)](https://index.scala-lang.org/guardian/grid/targeting-client)
+  ```
+  libraryDependencies += "com.gu" %% "targeting-client" % "[maven version number]"
+  ```
+* Play **2.6** : use [![targeting-client artifacts](https://index.scala-lang.org/guardian/grid/targeting-client-play26/latest-by-scala-version.svg)](https://index.scala-lang.org/guardian/grid/targeting-client-play26)
+  ```
+  libraryDependencies += "com.gu" %% "targeting-client" % "[maven version number]"
+  ```
 
 # Usage
 
@@ -36,5 +50,4 @@ Campaign types are expressed as a set of fields. To add a new set of fields edit
 
 # Publishing a new version
 
-1. Get access to oss.sonatype.org (ask a Dev Manager/team member if unsure on this - there is a []doc on this](https://docs.google.com/document/d/1M_MiE8qntdDn97QIRnIUci5wdVQ8_defCqpeAwoKY8g/edit#heading=h.7n25tzj28wmr))
-2. Run `sbt release`
+This repo is using the [`gha-scala-library-release-workflow`](https://github.com/guardian/gha-scala-library-release-workflow) library. Detailed instructions for how to release a new version can be found [here](https://github.com/guardian/gha-scala-library-release-workflow/blob/main/docs/making-a-release.md).

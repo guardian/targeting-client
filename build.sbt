@@ -14,7 +14,6 @@ lazy val root = (project in file(".")).aggregate(
 
 val sonatypeReleaseSettings = Seq(
   licenses := Seq("Apache V2" -> url("https://www.apache.org/licenses/LICENSE-2.0.html")),
-  releaseVersion := fromAggregatedAssessedCompatibilityWithLatestRelease().value,
   releaseProcess := Seq[ReleaseStep](
     checkSnapshotDependencies,
     inquireVersions,

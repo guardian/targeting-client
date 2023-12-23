@@ -1,4 +1,5 @@
 # targeting-client
+[![Release](https://github.com/guardian/targeting-client/actions/workflows/release.yml/badge.svg)](https://github.com/guardian/targeting-client/actions/workflows/release.yml)
 
 This repository contains shared code used by targeting, frontend, and MAPI to create and process targeted campaigns.
 

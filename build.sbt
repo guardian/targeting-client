@@ -13,6 +13,7 @@ lazy val root = (project in file(".")).aggregate(
 )
 
 val sonatypeReleaseSettings = Seq(
+  releaseVersion := fromAggregatedAssessedCompatibilityWithLatestRelease().value,
   releaseProcess := Seq[ReleaseStep](
     checkSnapshotDependencies,
     inquireVersions,

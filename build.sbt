@@ -13,7 +13,6 @@ lazy val root = (project in file(".")).aggregate(
 )
 
 val sonatypeReleaseSettings = Seq(
-  licenses := Seq("Apache V2" -> url("https://www.apache.org/licenses/LICENSE-2.0.html")),
   releaseProcess := Seq[ReleaseStep](
     checkSnapshotDependencies,
     inquireVersions,
@@ -29,6 +28,7 @@ val sonatypeReleaseSettings = Seq(
 def clientWith(playJsonVersion: PlayJsonVersion) =
   Project(playJsonVersion.projectId, file(playJsonVersion.projectId))
   .settings(
+    licenses := Seq(License.Apache2),
     scalaVersion := "2.13.12",
     organization := "com.gu.targeting-client",
     scalacOptions ++= Seq("-feature", "-deprecation", "-release:11"),

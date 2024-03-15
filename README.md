@@ -15,14 +15,6 @@ Versions
   ```
   libraryDependencies += "com.gu.targeting-client" %% "client-play-json-v28" % "[maven version number]"
   ```
-* Play **2.7** : use [![targeting-client artifacts](https://img.shields.io/badge/targeting--client_--_JVM-1.0.0_(Scala_2.13,_2.12,_2.11)-green.svg)](https://index.scala-lang.org/guardian/grid/targeting-client)
-  ```
-  libraryDependencies += "com.gu" %% "targeting-client" % "[maven version number]"
-  ```
-* Play **2.6** : use [![targeting-client artifacts](https://index.scala-lang.org/guardian/grid/targeting-client-play26/latest-by-scala-version.svg)](https://index.scala-lang.org/guardian/grid/targeting-client-play26)
-  ```
-  libraryDependencies += "com.gu" %% "targeting-client" % "[maven version number]"
-  ```
 
 # Usage
 

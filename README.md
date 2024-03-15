@@ -7,7 +7,7 @@ Versions
 
 ### Supported Play Versions
 
-* Play **3.0** : use [![targeting-client artifacts](https://index.scala-lang.org/guardian/grid/targeting-client/client-play-json-v30/latest-by-scala-version.svg)](https://index.scala-lang.org/guardian/grid/targeting-client/client-play-json-v28/)
+* Play **3.0** : use [![client-play-json-v30 Scala version support](https://index.scala-lang.org/guardian/targeting-client/client-play-json-v30/latest-by-scala-version.svg?platform=jvm)](https://index.scala-lang.org/guardian/targeting-client/client-play-json-v30)
   ```
   libraryDependencies += "com.gu.targeting-client" %% "client-play-json-v30" % "[maven version number]"
   ```

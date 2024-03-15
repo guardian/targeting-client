@@ -3,22 +3,19 @@
 
 This repository contains shared code used by targeting, frontend, and MAPI to create and process targeted campaigns.
 
-# Version mapping
+Versions
+--------
 
-|Targeting Client Version|Play Version|Scala Version     |Artefact                                            |
-|------------------------|------------|------------------|----------------------------------------------------|
-|0.14.8                  |2.6         |2.11 & 2.12       |`"com.gu" %% "targeting-client-play26" % "0.14.8"`  |
-|1.0.x                   |2.7         |2.11 & 2.12 & 2.13|`"com.gu" %% "targeting-client" % "1.0.0"`          |
-|1.1.x                   |2.8         |2.12 & 2.13       |`"com.gu" %% "targeting-client" % "1.1.0"`          |
+### Supported Play Versions
 
-# Usage
-
-To use this library add the following to your dependency libraries in your projects `build.sbt`:
-
-`"com.gu" %% "targeting-client" % "1.1.0"`
-
-Instead of version `0.1.0` insert the version you'd like to use (probably the latest). 
-
+* Play **3.0** : use [![client-play-json-v30 Scala version support](https://index.scala-lang.org/guardian/targeting-client/client-play-json-v30/latest-by-scala-version.svg?platform=jvm)](https://index.scala-lang.org/guardian/targeting-client/client-play-json-v30)
+  ```
+  libraryDependencies += "com.gu.targeting-client" %% "client-play-json-v30" % "[maven version number]"
+  ```
+* Play **2.8** : use [![client-play-json-v28 Scala version support](https://index.scala-lang.org/guardian/targeting-client/client-play-json-v28/latest-by-scala-version.svg?platform=jvm)](https://index.scala-lang.org/guardian/targeting-client/client-play-json-v28)
+  ```
+  libraryDependencies += "com.gu.targeting-client" %% "client-play-json-v28" % "[maven version number]"
+  ```
 
 # Adding a new Campaign Type
 
@@ -35,7 +32,8 @@ Campaign types are expressed as a set of fields. To add a new set of fields edit
 
 > \* Note: you cannot have a variable called `_type` since the JSON serializers use this string in order to know what type of field is being read.
 
-# Publishing a new version
+# Publishing a new release
 
-1. Get access to oss.sonatype.org (ask a Dev Manager/team member if unsure on this - there is a []doc on this](https://docs.google.com/document/d/1M_MiE8qntdDn97QIRnIUci5wdVQ8_defCqpeAwoKY8g/edit#heading=h.7n25tzj28wmr))
-2. Run `sbt release`
+This repo uses [`gha-scala-library-release-workflow`](https://github.com/guardian/gha-scala-library-release-workflow)
+to automate publishing releases (both full & preview releases) - see
+[**Making a Release**](https://github.com/guardian/gha-scala-library-release-workflow/blob/main/docs/making-a-release.md).

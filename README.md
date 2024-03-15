@@ -16,15 +16,6 @@ Versions
   libraryDependencies += "com.gu.targeting-client" %% "client-play-json-v28" % "[maven version number]"
   ```
 
-# Usage
-
-To use this library add the following to your dependency libraries in your projects `build.sbt`:
-
-`"com.gu" %% "targeting-client" % "1.1.0"`
-
-Instead of version `0.1.0` insert the version you'd like to use (probably the latest). 
-
-
 # Adding a new Campaign Type
 
 Campaign types are expressed as a set of fields. To add a new set of fields edit the Fields.scala file in the following way. I'll use the example set of a charity drive campaign.
@@ -40,6 +31,8 @@ Campaign types are expressed as a set of fields. To add a new set of fields edit
 
 > \* Note: you cannot have a variable called `_type` since the JSON serializers use this string in order to know what type of field is being read.
 
-# Publishing a new version
+# Publishing a new release
 
-This repo is using the [`gha-scala-library-release-workflow`](https://github.com/guardian/gha-scala-library-release-workflow) library. Detailed instructions for how to release a new version can be found [here](https://github.com/guardian/gha-scala-library-release-workflow/blob/main/docs/making-a-release.md).
+This repo uses [`gha-scala-library-release-workflow`](https://github.com/guardian/gha-scala-library-release-workflow)
+to automate publishing releases (both full & preview releases) - see
+[**Making a Release**](https://github.com/guardian/gha-scala-library-release-workflow/blob/main/docs/making-a-release.md).

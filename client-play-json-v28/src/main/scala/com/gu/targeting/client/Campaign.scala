@@ -53,6 +53,7 @@ object Campaign {
       case _: ReportFields => Some(Fields.reportType)
       case _: SurveyFields => Some(Fields.surveyType)
       case _: ParticipationFields => Some(Fields.participationType)
+      case _: ReporterCalloutFields => Some(Fields.reporterCalloutType)
       case _ => None
     }
   }

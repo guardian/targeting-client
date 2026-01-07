@@ -43,6 +43,7 @@ object Fields {
   val reportFormat = Json.format[ReportFields]
 
   implicit val contactFormat = Json.format[Contact]
+  implicit val emailContactFormat = Json.format[EmailContact]
 
   implicit val questionFormat = Json.format[SurveyQuestion]
   

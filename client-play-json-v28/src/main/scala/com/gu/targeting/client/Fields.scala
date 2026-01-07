@@ -12,16 +12,18 @@ case class ReportFields(campaignId: String) extends Fields
 case class SurveyFields(campaignId: String, questions: Seq[SurveyQuestion]) extends Fields
 // 'Participation' is more commonly known as a 'community callout' outside of this project
 case class ParticipationFields(callout: String, formId: Int, tagName: String, description: Option[String], formFields: JsValue, formUrl: Option[String], contacts: Option[Seq[Contact]]) extends Fields
+
 case class ReporterCalloutFields(title: String,
                                  subtitle: String,
                                  intro: String,
                                  mainText: String,
+                                 emailContact1: Option[String],
+                                 emailContact2: Option[String],
                                  messagingContacts: Seq[Contact],
-                                 emailContacts: Seq[EmailContact],
                                  securedropContact: Option[String],
-                                 endNote: Option[String]) extends Fields
+                                 endNote: Option[String]
+                                 ) extends Fields
 
-case class EmailContact(name: String, text: Option[String])
 case class Contact(name: String, value: String, urlPrefix: String, guidance: Option[String])
 case class SurveyQuestion(question: String, askWhy: Boolean)
 
@@ -50,7 +52,6 @@ object Fields {
   val reportFormat = Json.format[ReportFields]
 
   implicit val contactFormat = Json.format[Contact]
-  implicit val emailContactFormat = Json.format[EmailContact]
 
   implicit val questionFormat = Json.format[SurveyQuestion]
   

@@ -5,7 +5,6 @@ import sbtversionpolicy.withsbtrelease.ReleaseVersion.fromAggregatedAssessedComp
 name := "targeting-client"
 
 lazy val root = (project in file(".")).aggregate(
-  client_play_json28,
   client_play_json30,
 ).settings(
   publish / skip := true,
@@ -41,5 +40,4 @@ def clientWith(playJsonVersion: PlayJsonVersion) =
     )
   )
 
-lazy val client_play_json28 = clientWith(PlayJsonVersion.V28)
 lazy val client_play_json30 = clientWith(PlayJsonVersion.V30)

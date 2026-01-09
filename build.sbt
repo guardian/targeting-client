@@ -29,7 +29,7 @@ def clientWith(playJsonVersion: PlayJsonVersion) =
   Project(playJsonVersion.projectId, file(playJsonVersion.projectId))
   .settings(
     licenses := Seq(License.Apache2),
-    scalaVersion := "2.13.12",
+    scalaVersion := "2.13.18",
     organization := "com.gu.targeting-client",
     scalacOptions ++= Seq("-feature", "-deprecation", "-release:11"),
     libraryDependencies ++= Seq(
@@ -37,7 +37,8 @@ def clientWith(playJsonVersion: PlayJsonVersion) =
       scalaTest,
       http,
       playJsonVersion.lib
-    )
+    ),
+    dependencyOverrides ++= playJsonVersion.overrides
   )
 
 lazy val client_play_json30 = clientWith(PlayJsonVersion.V30)

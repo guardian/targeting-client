@@ -16,10 +16,10 @@ case class ParticipationFields(callout: String, formId: Int, tagName: String, de
 case class ReporterCalloutFields(title: String,
                                  subtitle: String,
                                  intro: String,
+                                 mainTextHeading: String,
                                  mainText: String,
-                                 emailContact1: Option[String],
-                                 emailContact2: Option[String],
-                                 messagingContacts: Seq[Contact],
+                                 emailContact: Option[String],
+                                 messagingContact: Option[String],
                                  securedropContact: Option[String],
                                  endNote: Option[String]
                                  ) extends Fields

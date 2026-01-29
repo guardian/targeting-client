@@ -21,7 +21,8 @@ case class ReporterCalloutFields(title: String,
                                  emailContact: Option[String],
                                  messagingContact: Option[String],
                                  securedropContact: Option[String],
-                                 endNote: Option[String]
+                                 endNote: Option[String],
+                                 shortText: Option[String] // for apple news/other platforms where we cant collapse the component
                                  ) extends Fields
 
 case class Contact(name: String, value: String, urlPrefix: String, guidance: Option[String])

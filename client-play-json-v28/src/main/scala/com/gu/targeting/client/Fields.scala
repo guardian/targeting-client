@@ -18,6 +18,7 @@ case class ReporterCalloutFields(title: String,
                                  intro: String,
                                  mainTextHeading: String,
                                  mainText: String,
+                                 shortText: String, // for apple news/other platforms where we cant collapse the component
                                  emailContact: Option[String],
                                  messagingContact: Option[String],
                                  securedropContact: Option[String],

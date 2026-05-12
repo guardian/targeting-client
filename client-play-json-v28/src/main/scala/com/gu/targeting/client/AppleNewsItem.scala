@@ -11,7 +11,13 @@ import scala.concurrent.Future
 import scala.io.Source
 import scala.util.Try
 
-sealed trait AppleNewsItem
+sealed trait AppleNewsItem {
+  val id: UUID
+  val name: String
+  val active: Boolean
+  val regions: AppleNewsRegions
+  val rules: List[Rule]
+}
 
 object AppleNewsItem {
   implicit val reads: Reads[AppleNewsItem] = (JsPath \ "type")
@@ -50,9 +56,11 @@ object AppleNewsRegions {
 
 case class AppleNewsItemCache(appleNewsItems: List[AppleNewsItem], totalAppleNewsItems: Option[Int]) {
   def getAppleNewsItemsForTags(tags: Seq[String], stripRules: Boolean = false): List[AppleNewsItem] = {
-    // TODO :need to conditionalise this for podcasts properly
-      appleNewsItem.filter(c => c.rules.exists(r => Rule.evaluate(r, tags))).map { c =>
-        if (stripRules) c.copy(rules = Nil) else c
+      appleNewsItems.filter(c => c.rules.exists(r => Rule.evaluate(r, tags))).map { c =>
+        if (stripRules) c match {
+          case p: Podcast => p.copy(rules = Nil)
+          case other => other
+        }  else c
       }
   }
 }
@@ -85,7 +93,6 @@ object AppleNewsItemCache {
       val totalAppleNewsItems = Try(header.getValue.toInt).toOption
 
       val appleNewsItems = Json.parse(body).as[List[AppleNewsItem]].filter(appleNewsItem => {
-        // TODO: handle types here
         // Is the number of rules less than or equal to the limit?
         ruleLimit.forall(appleNewsItem.rules.length <= _) &&
         // And all of the rules have too many required or lacking tags

@@ -11,22 +11,23 @@ import scala.concurrent.Future
 import scala.io.Source
 import scala.util.Try
 
-sealed trait AppleNewsItem {
+// AN stands for Apple News
+sealed trait ANComponent {
   val id: UUID
   val name: String
   val active: Boolean
-  val regions: AppleNewsRegions
+  val regions: ANRegions
   val rules: List[Rule]
 }
 
-object AppleNewsItem {
-  implicit val reads: Reads[AppleNewsItem] = (JsPath \ "type")
+object ANComponent {
+  implicit val reads: Reads[ANComponent] = (JsPath \ "type")
     .read[String]
     .flatMap(_ match {
       case "podcast" => Json.reads[Podcast].widen
-      case t         => Reads.failed(s"Unrecognised AppleNewsItem type: $t")
+      case t         => Reads.failed(s"Unrecognised ANComponent type: $t")
     })
-  implicit val writes: Writes[AppleNewsItem] =
+  implicit val writes: Writes[ANComponent] =
     Writes(_ match {
       case p: Podcast =>
         (Json
@@ -40,23 +41,23 @@ case class Podcast(
   name: String,
   active: Boolean,
   podcastLink: URI,
-  regions: AppleNewsRegions,
+  regions: ANRegions,
   rules: List[Rule]
-) extends AppleNewsItem
+) extends ANComponent
 
 object Podcast {
   implicit val format: Format[Podcast] = Json.format[Podcast]
 }
 
-case class AppleNewsRegions(US: Boolean, UK: Boolean, AU: Boolean)
+case class ANRegions(US: Boolean, UK: Boolean, AU: Boolean)
 
-object AppleNewsRegions {
-  implicit val format: Format[AppleNewsRegions] = Json.format[AppleNewsRegions]
+object ANRegions {
+  implicit val format: Format[ANRegions] = Json.format[ANRegions]
 }
 
-case class AppleNewsItemCache(appleNewsItems: List[AppleNewsItem], totalAppleNewsItems: Option[Int]) {
-  def getAppleNewsItemsForTags(tags: Seq[String], stripRules: Boolean = false): List[AppleNewsItem] = {
-      appleNewsItems.filter(c => c.rules.exists(r => Rule.evaluate(r, tags))).map { c =>
+case class ANComponentCache(appleNewsComponents: List[ANComponent], totalANComponents: Option[Int]) {
+  def getANComponentsForTags(tags: Seq[String], stripRules: Boolean = false): List[ANComponent] = {
+      appleNewsComponents.filter(c => c.rules.exists(r => Rule.evaluate(r, tags))).map { c =>
         if (stripRules) c match {
           case p: Podcast => p.copy(rules = Nil)
           case other => other
@@ -65,17 +66,17 @@ case class AppleNewsItemCache(appleNewsItems: List[AppleNewsItem], totalAppleNew
   }
 }
 
-object AppleNewsItemCache {
-  val TOTAL_ITEMS_HEADER_NAME = "Total-Apple-News-Items"
+object ANComponentCache {
+  val TOTAL_COMPONENTS_HEADER_NAME = "Total-AN-Components"
 
-  /** Fetch a new Apple News Items cache which contains the latest items.
-   * @param url should correspond to the api end point which lists items as json (https://targeting.gutools.co.uk/api/apple-news)
-   * @param limit truncate the number of items to this number
-   * @param ruleLimit Any items with more rules than this number will be dropped from the results
-   * @param tagLimit Any items with any rules with more tags (requiredTags + lackingTags) than this number will be dropped
+  /** Fetch a new Apple News Components cache which contains the latest components.
+   * @param url should correspond to the api end point which lists components as json (https://targeting.gutools.co.uk/api/apple-news)
+   * @param limit truncate the number of components to this number
+   * @param ruleLimit Any components with more rules than this number will be dropped from the results
+   * @param tagLimit Any components with any rules with more tags (requiredTags + lackingTags) than this number will be dropped
    * @param ec The execution context that will execute the blocking HTTP request
    */
-  def fetch(url: String, limit: Int = 100, ruleLimit: Option[Int] = None, tagLimit: Option[Int] = None)(implicit ec: ExecutionContext): Future[AppleNewsItemCache] = {
+  def fetch(url: String, limit: Int = 100, ruleLimit: Option[Int] = None, tagLimit: Option[Int] = None)(implicit ec: ExecutionContext): Future[ANComponentCache] = {
     val queryUrl = url + s"?activeOnly=true&limit=$limit&types=${Fields.allTypes.mkString(",")}"
 
     Future {
@@ -83,23 +84,23 @@ object AppleNewsItemCache {
 
       val status = response.getStatusLine.getStatusCode
       if (!(200 to 299).contains(status)) {
-        throw TargetingServiceException(s"Failed to get Apple News item list, status code: $status")
+        throw TargetingServiceException(s"Failed to get Apple News component list, status code: $status")
       }
 
       val body = Source.fromInputStream(response.getEntity.getContent).getLines().mkString("")
 
-      // Total number of items, used to indicate to the client how many items they've truncated
-      val header = response.getFirstHeader(TOTAL_ITEMS_HEADER_NAME)
-      val totalAppleNewsItems = Try(header.getValue.toInt).toOption
+      // Total number of components, used to indicate to the client how many components they've truncated
+      val header = response.getFirstHeader(TOTAL_COMPONENTS_HEADER_NAME)
+      val totalANComponents = Try(header.getValue.toInt).toOption
 
-      val appleNewsItems = Json.parse(body).as[List[AppleNewsItem]].filter(appleNewsItem => {
+      val appleNewsComponents = Json.parse(body).as[List[ANComponent]].filter(appleNewsComponent => {
         // Is the number of rules less than or equal to the limit?
-        ruleLimit.forall(appleNewsItem.rules.length <= _) &&
+        ruleLimit.forall(appleNewsComponent.rules.length <= _) &&
         // And all of the rules have too many required or lacking tags
-        tagLimit.forall(limit => appleNewsItem.rules.forall(rule => rule.requiredTags.length + rule.lackingTags.length <= limit))
+        tagLimit.forall(limit => appleNewsComponent.rules.forall(rule => rule.requiredTags.length + rule.lackingTags.length <= limit))
       })
 
-      AppleNewsItemCache(appleNewsItems, totalAppleNewsItems)
+      ANComponentCache(appleNewsComponents, totalANComponents)
     }
   }
 }

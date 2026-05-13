@@ -12,22 +12,29 @@ import scala.io.Source
 import scala.util.Try
 
 // AN stands for Apple News
-sealed trait ANComponent {
-  val id: UUID
-  val name: String
-  val active: Boolean
-  val regions: ANRegions
-  val rules: List[Rule]
-}
+case class ANComponent(
+  id: UUID,
+  name: String,
+  active: Boolean,
+  regions: ANRegions,
+  rules: List[Rule],
+  data: ComponentData
+)
 
 object ANComponent {
-  implicit val reads: Reads[ANComponent] = (JsPath \ "type")
+  implicit val format: Format[ANComponent] = Json.format[ANComponent]
+}
+
+sealed trait ComponentData
+
+object ComponentData {
+  implicit val reads: Reads[ComponentData] = (JsPath \ "type")
     .read[String]
     .flatMap(_ match {
       case "podcast" => Json.reads[Podcast].widen
-      case t         => Reads.failed(s"Unrecognised ANComponent type: $t")
+      case t         => Reads.failed(s"Unrecognised ComponentData type: $t")
     })
-  implicit val writes: Writes[ANComponent] =
+  implicit val writes: Writes[ComponentData] =
     Writes(_ match {
       case p: Podcast =>
         (Json
@@ -37,13 +44,8 @@ object ANComponent {
 }
 
 case class Podcast(
-  id: UUID,
-  name: String,
-  active: Boolean,
   podcastLink: URI,
-  regions: ANRegions,
-  rules: List[Rule]
-) extends ANComponent
+) extends ComponentData
 
 object Podcast {
   implicit val format: Format[Podcast] = Json.format[Podcast]
@@ -58,10 +60,9 @@ object ANRegions {
 case class ANComponentCache(appleNewsComponents: List[ANComponent], totalANComponents: Option[Int]) {
   def getANComponentsForTags(tags: Seq[String], stripRules: Boolean = false): List[ANComponent] = {
       appleNewsComponents.filter(c => c.rules.exists(r => Rule.evaluate(r, tags))).map { c =>
-        if (stripRules) c match {
-          case p: Podcast => p.copy(rules = Nil)
-          case other => other
-        }  else c
+        if (stripRules) c.data match {
+          case p: Podcast => c.copy(rules = Nil)
+        } else c
       }
   }
 }

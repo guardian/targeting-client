@@ -21,6 +21,15 @@ case class ANComponent(
   data: ComponentData
 )
 
+// ANComponent type without the id field to allow parsing before creating the component and assigning the ID
+case class preCreateANComponent(
+  name: String,
+  active: Boolean,
+  regions: ANRegions,
+  rules: List[Rule],
+  data: ComponentData
+)
+
 object ANComponent {
   implicit val format: Format[ANComponent] = Json.format[ANComponent]
 }

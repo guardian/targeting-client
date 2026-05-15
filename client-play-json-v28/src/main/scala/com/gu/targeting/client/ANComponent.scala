@@ -22,7 +22,7 @@ case class ANComponent(
 )
 
 // ANComponent type without the id field to allow parsing before creating the component and assigning the ID
-case class preCreateANComponent(
+case class PreCreateANComponent(
   name: String,
   active: Boolean,
   regions: ANRegions,

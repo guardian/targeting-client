@@ -11,7 +11,7 @@ case class ANComponent(
   name: String,
   active: Boolean,
   regions: ANRegions,
-  rules: List[Rule],
+  rules: Seq[Rule],
   data: ComponentData
 )
 
@@ -20,7 +20,7 @@ case class ANComponentWithoutID(
   name: String,
   active: Boolean,
   regions: ANRegions,
-  rules: List[Rule],
+  rules: Seq[Rule],
   data: ComponentData
 )
 

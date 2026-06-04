@@ -13,8 +13,7 @@ object Rule {
     )(Rule.apply, unlift(Rule.unapply))
 
   def evaluate(rule: Rule, tags: Seq[String]): Boolean = {
-    if (rule.matchAllTags) tags.intersect(rule.lackingTags).isEmpty
-    else tags.intersect(rule.requiredTags).nonEmpty && tags.intersect(rule.lackingTags).isEmpty
+    (rule.matchAllTags || tags.intersect(rule.requiredTags).nonEmpty) && tags.intersect(rule.lackingTags).isEmpty
   }
 
 }

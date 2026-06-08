@@ -38,8 +38,9 @@ object ComponentData {
   implicit val reads: Reads[ComponentData] = (JsPath \ "type")
     .read[String]
     .flatMap(_ match {
-      case "podcast" => Json.reads[Podcast].widen
-      case t         => Reads.failed(s"Unrecognised ComponentData type: $t")
+      case "podcast"           => Json.reads[Podcast].widen
+      case "newsletter-signup" => Json.reads[NewsletterSignup].widen
+      case t                    => Reads.failed(s"Unrecognised ComponentData type: $t")
     })
   implicit val writes: Writes[ComponentData] =
     Writes(_ match {
@@ -47,6 +48,10 @@ object ComponentData {
         (Json
           .obj("type" -> JsString("podcast"))
           ++ Json.writes[Podcast].writes(p))
+      case n: NewsletterSignup =>
+        (Json
+          .obj("type" -> JsString("newsletter-signup"))
+          ++ Json.writes[NewsletterSignup].writes(n))
     })
 }
 
@@ -56,6 +61,18 @@ case class Podcast(
 
 object Podcast {
   implicit val format: Format[Podcast] = Json.format[Podcast]
+}
+
+case class NewsletterSignup(
+  signupComponent: String,
+  name: String,
+  url: String,
+  description: String,
+  label: String,
+) extends ComponentData
+
+object NewsletterSignup {
+  implicit val format: Format[NewsletterSignup] = Json.format[NewsletterSignup]
 }
 
 case class ANRegions(US: Boolean, UK: Boolean, AU: Boolean)

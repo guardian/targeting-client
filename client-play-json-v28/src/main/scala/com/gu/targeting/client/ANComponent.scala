@@ -57,7 +57,24 @@ object ComponentData {
 
 case class Podcast(
   podcastLink: URI,
+  orientation: PodcastOrientation
 ) extends ComponentData
+
+sealed trait PodcastOrientation
+object PodcastOrientation {
+  implicit val reads: Reads[PodcastOrientation] = Reads.StringReads.flatMap {
+    case "automatic"  => Reads.pure(Automatic)
+    case "horizontal" => Reads.pure(Horizontal)
+    case s            => Reads.failed(s"Unrecognised PodcastOrientation value: $s")
+  }
+  implicit val writes: Writes[PodcastOrientation] = Writes.StringWrites.contramap {
+    case Automatic  => "automatic"
+    case Horizontal => "horizontal"
+  }
+}
+
+case object Automatic extends PodcastOrientation
+case object Horizontal extends PodcastOrientation
 
 object Podcast {
   implicit val format: Format[Podcast] = Json.format[Podcast]

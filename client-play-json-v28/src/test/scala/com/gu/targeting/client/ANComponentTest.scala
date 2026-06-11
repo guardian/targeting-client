@@ -12,7 +12,7 @@ class ANComponentTest extends AnyFreeSpec with Matchers {
   )
 
   private val newsletterSignupData = NewsletterSignup(
-    signupComponent = "wellActually",
+    imageFileName = "wellActually.png",
     name = "Well Actually",
     url = "https://www.theguardian.com/well-actually-sign-up",
     description = "Wellness advice for good life",
@@ -28,7 +28,7 @@ class ANComponentTest extends AnyFreeSpec with Matchers {
         "rules": [],
         "data": {
           "type": "newsletter-signup",
-          "signupComponent": "wellActually",
+          "imageFileName": "wellActually.png",
           "name": "Well Actually",
           "url": "https://www.theguardian.com/well-actually-sign-up",
           "description": "Wellness advice for good life",

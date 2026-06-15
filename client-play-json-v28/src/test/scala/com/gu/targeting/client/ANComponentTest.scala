@@ -9,7 +9,7 @@ import play.api.libs.json.Json
 class ANComponentTest extends AnyFreeSpec with Matchers {
   private val podcastData = Podcast(
     podcastLink = new java.net.URI("https://www.theguardian.com/podcasts/series/today-in-focus"),
-    orientation = Horizontal
+    orientation = Podcast.Orientation.Horizontal
   )
 
   private val newsletterSignupData = NewsletterSignup(

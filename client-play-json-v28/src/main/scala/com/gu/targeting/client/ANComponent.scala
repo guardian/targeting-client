@@ -81,7 +81,7 @@ object Podcast {
 }
 
 case class NewsletterSignup(
-  signupComponent: String,
+  imageFileName: String,
   name: String,
   url: String,
   description: String,

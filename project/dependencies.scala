@@ -14,8 +14,8 @@ object Dependencies {
 
     val lib: ModuleID = groupId %% "play-json" % exactPlayJsonVersion
 
-    val jacksonVersion = "2.20.1"
-    val jacksonDatabindVersion = "2.20.1"
+    val jacksonVersion = "2.21.4"
+    val jacksonDatabindVersion = "2.21.4"
 
     val overrides: Seq[ModuleID] = Seq(
       "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion,

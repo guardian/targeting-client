@@ -5,25 +5,42 @@ import play.api.libs.functional.syntax._
 
 trait Fields
 
-case class EmailFields(name: String, theme: String, about: String, description: String, frequency: String, listId: String) extends Fields
-case class BadgeFields(seriesTag: String, imageUrl: String, classModifier: Option[String]) extends Fields
+case class EmailFields(
+    name: String,
+    theme: String,
+    about: String,
+    description: String,
+    frequency: String,
+    listId: String,
+) extends Fields
+case class BadgeFields(seriesTag: String, imageUrl: String, classModifier: Option[String])
+    extends Fields
 case class EpicFields(campaignId: String) extends Fields
 case class ReportFields(campaignId: String) extends Fields
 case class SurveyFields(campaignId: String, questions: Seq[SurveyQuestion]) extends Fields
 // 'Participation' is more commonly known as a 'community callout' outside of this project
-case class ParticipationFields(callout: String, formId: Int, tagName: String, description: Option[String], formFields: JsValue, formUrl: Option[String], contacts: Option[Seq[Contact]]) extends Fields
+case class ParticipationFields(
+    callout: String,
+    formId: Int,
+    tagName: String,
+    description: Option[String],
+    formFields: JsValue,
+    formUrl: Option[String],
+    contacts: Option[Seq[Contact]],
+) extends Fields
 
-case class ReporterCalloutFields(title: String,
-                                 subtitle: String,
-                                 intro: String,
-                                 mainTextHeading: String,
-                                 mainText: String,
-                                 shortText: String, // for apple news/other platforms where we cant collapse the component
-                                 emailContact: Option[String],
-                                 messagingContact: Option[String],
-                                 securedropContact: Option[String],
-                                 endNote: Option[String]
-                                 ) extends Fields
+case class ReporterCalloutFields(
+    title: String,
+    subtitle: String,
+    intro: String,
+    mainTextHeading: String,
+    mainText: String,
+    shortText: String, // for apple news/other platforms where we cant collapse the component
+    emailContact: Option[String],
+    messagingContact: Option[String],
+    securedropContact: Option[String],
+    endNote: Option[String],
+) extends Fields
 
 case class Contact(name: String, value: String, urlPrefix: String, guidance: Option[String])
 case class SurveyQuestion(question: String, askWhy: Boolean)
@@ -42,7 +59,8 @@ object Fields {
   val participationType = "callout"
   val reporterCalloutType = "reporter-callout"
 
-  val allTypes = List(emailType, badgeType, epicType, reportType, surveyType, participationType, reporterCalloutType)
+  val allTypes = List(emailType, badgeType, epicType, reportType, surveyType, participationType,
+    reporterCalloutType)
 
   val badgeFormat = Json.format[BadgeFields]
 
@@ -55,7 +73,7 @@ object Fields {
   implicit val contactFormat = Json.format[Contact]
 
   implicit val questionFormat = Json.format[SurveyQuestion]
-  
+
   val surveyFormat = Json.format[SurveyFields]
 
   val participationFormat = Json.format[ParticipationFields]
@@ -70,10 +88,14 @@ object Fields {
         case f: EpicFields => epicFormat.writes(f) + (reservedTypeField, JsString(epicType))
         case f: ReportFields => reportFormat.writes(f) + (reservedTypeField, JsString(reportType))
         case f: SurveyFields => surveyFormat.writes(f) + (reservedTypeField, JsString(surveyType))
-        case f: ParticipationFields => participationFormat.writes(f) + (reservedTypeField, JsString(participationType))
-        case f: ReporterCalloutFields => reporterCalloutFormat.writes(f) + (reservedTypeField, JsString(reporterCalloutType))
+        case f: ParticipationFields => participationFormat.writes(f) +
+            (reservedTypeField, JsString(participationType))
+        case f: ReporterCalloutFields => reporterCalloutFormat.writes(f) +
+            (reservedTypeField, JsString(reporterCalloutType))
         case other =>
-          throw new UnsupportedOperationException(s"Unable to serialize field of type ${other.getClass}")
+          throw new UnsupportedOperationException(
+            s"Unable to serialize field of type ${other.getClass}"
+          )
       }
     }
   }

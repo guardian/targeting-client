@@ -3,6 +3,12 @@
 
 This repository contains shared code used by targeting, frontend, and MAPI to create and process targeted campaigns.
 
+# Code formatting
+
+This project uses [scalafmt](https://scalameta.org/scalafmt/) to format Scala code: the formatter is run in CI, and will fail if any files need formatting. For the best experience, we recommend configuring your text editor to run scalafmt, as described in [the scalafmt docs](https://scalameta.org/scalafmt/docs/installation.html).
+
+The project has a `.git-blame-ignore-revs` file which contains a commit that first applied the formatter to the codebase. This file can be used to ignore that commit when using `git blame`, via `git config --local blame.ignoreRevsFile .git-blame-ignore-revs`.
+
 Versions
 --------
 

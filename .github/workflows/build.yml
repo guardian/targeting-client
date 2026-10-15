@@ -1,0 +1,23 @@
+name: CI
+on:
+  pull_request:
+  # Manual invocation
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+permissions:
+  contents: read
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Setup Scala
+        uses: guardian/setup-scala@v1
+
+      - name: sbt
+        run: sbt clean scalafmtCheck scalafmtSbtCheck Test/scalafmtCheck compile test

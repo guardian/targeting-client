@@ -5,10 +5,10 @@ import sbtversionpolicy.withsbtrelease.ReleaseVersion.fromAggregatedAssessedComp
 name := "targeting-client"
 
 lazy val root = (project in file(".")).aggregate(
-  client_play_json30,
+  client_play_json30
 ).settings(
   publish / skip := true,
-  sonatypeReleaseSettings
+  sonatypeReleaseSettings,
 )
 
 val sonatypeReleaseSettings = Seq(
@@ -21,24 +21,24 @@ val sonatypeReleaseSettings = Seq(
     commitReleaseVersion,
     tagRelease,
     setNextVersion,
-    commitNextVersion
-  )
+    commitNextVersion,
+  ),
 )
 
 def clientWith(playJsonVersion: PlayJsonVersion) =
   Project(playJsonVersion.projectId, file(playJsonVersion.projectId))
-  .settings(
-    licenses := Seq(License.Apache2),
-    scalaVersion := "2.13.18",
-    organization := "com.gu.targeting-client",
-    scalacOptions ++= Seq("-feature", "-deprecation", "-release:11"),
-    libraryDependencies ++= Seq(
-      commonsIo,
-      scalaTest,
-      http,
-      playJsonVersion.lib
-    ),
-    dependencyOverrides ++= playJsonVersion.overrides
-  )
+    .settings(
+      licenses := Seq(License.Apache2),
+      scalaVersion := "2.13.18",
+      organization := "com.gu.targeting-client",
+      scalacOptions ++= Seq("-feature", "-deprecation", "-release:11"),
+      libraryDependencies ++= Seq(
+        commonsIo,
+        scalaTest,
+        http,
+        playJsonVersion.lib,
+      ),
+      dependencyOverrides ++= playJsonVersion.overrides,
+    )
 
 lazy val client_play_json30 = clientWith(PlayJsonVersion.V30)

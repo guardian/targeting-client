@@ -10,10 +10,11 @@ object Rule {
     (JsPath \ "requiredTags").format[List[String]] and
       (JsPath \ "lackingTags").format[List[String]] and
       (JsPath \ "matchAllTags").format[Boolean]
-    )(Rule.apply, unlift(Rule.unapply))
+  )(Rule.apply, unlift(Rule.unapply))
 
   def evaluate(rule: Rule, tags: Seq[String]): Boolean = {
-    (rule.matchAllTags || tags.intersect(rule.requiredTags).nonEmpty) && tags.intersect(rule.lackingTags).isEmpty
+    (rule.matchAllTags || tags.intersect(rule.requiredTags).nonEmpty) &&
+    tags.intersect(rule.lackingTags).isEmpty
   }
 
 }

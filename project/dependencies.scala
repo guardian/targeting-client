@@ -6,9 +6,9 @@ object Dependencies {
   val http = "org.apache.httpcomponents" % "httpclient" % "4.5.12"
 
   case class PlayJsonVersion(
-    majorMinorVersion: String,
-    groupId: String,
-    exactPlayJsonVersion: String
+      majorMinorVersion: String,
+      groupId: String,
+      exactPlayJsonVersion: String,
   ) {
     val projectId = s"client-play-json-v$majorMinorVersion"
 
@@ -24,7 +24,7 @@ object Dependencies {
       "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % jacksonVersion,
       "com.fasterxml.jackson.module" % "jackson-module-parameter-names" % jacksonVersion,
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion,
-      "com.fasterxml.jackson.core" % "jackson-databind" % jacksonDatabindVersion
+      "com.fasterxml.jackson.core" % "jackson-databind" % jacksonDatabindVersion,
     )
   }
 

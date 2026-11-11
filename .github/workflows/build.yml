@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Scala
-        uses: guardian/setup-scala@v1
+        uses: guardian/setup-scala@v2
 
       - name: sbt
         run: sbt clean scalafmtCheck scalafmtSbtCheck Test/scalafmtCheck compile test
